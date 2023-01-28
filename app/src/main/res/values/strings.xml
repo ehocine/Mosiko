@@ -1,0 +1,41 @@
+<resources>
+
+    <string name="app_name" translatable="false">Mosiko</string>
+    
+    <string name="scan_local_songs">Scan local songs</string>
+    <string name="sort_by">Sort by</string>
+    <string name="date_added">Date added</string>
+    <string name="song_name">Song name</string>
+    <string name="artist_name">Artist name</string>
+    <string name="cancel">Cancel</string>
+    <string name="search_placeholder">Song, artist, or album</string>
+    <string name="song">Song</string>
+    <string name="artist">Artist</string>
+    <string name="album">Album</string>
+    <string name="unknown">Unknown</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_playlist">Add to playlist</string>
+    <string name="set_timer">Set timer</string>
+    <string name="play_all">Play all</string>
+    <string name="favorite">Favorite</string>
+    <string name="just_played">Just played</string>
+    <string name="new_playlist">New playlist</string>
+    <string name="rename_playlist">Rename playlist</string>
+    <string name="my_playlist">My playlist</string>
+    <string name="enter_playlist_name">Enter playlist name</string>
+    <string name="playlist_name_cannot_be_empty">Playlist name cannot be empty</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="ok">OK</string>
+    <string name="add_song">Add song</string>
+    <string name="no_song">No Song</string>
+    <string name="no_album">No Album</string>
+    <string name="no_artist">No Artist</string>
+    <string name="added">Added</string>
+    <string name="successfully_added">Successfully added</string>
+    <string name="non_active">Non-active</string>
+    <string name="set_time_to">Set time to</string>
+    <string name="timer_disabled">Timer disabled</string>
+    <string name="timer_is_set_to">Timer is set to</string>
+
+</resources>
