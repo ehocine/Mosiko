@@ -38,8 +38,6 @@ import com.hocel.mosiko.ui.theme.*
 import com.hocel.mosiko.utils.ComposeUtils
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.hocel.mosiko.ui.theme.*
-import com.hocel.mosiko.ui.MusyNavigation
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(

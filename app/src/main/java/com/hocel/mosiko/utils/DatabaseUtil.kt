@@ -3,7 +3,7 @@ package com.hocel.mosiko.utils
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.hocel.mosiko.database.MusyDatabase
+import com.hocel.mosiko.database.MosikoDatabase
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import kotlinx.coroutines.CoroutineScope
@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 
 class DatabaseUtil(context: Context) {
 
-    private val musicDao = MusyDatabase.getInstance(context).musicDAO()
-    private val playlistDao = MusyDatabase.getInstance(context).playlistDAO()
+    private val musicDao = MosikoDatabase.getInstance(context).musicDAO()
+    private val playlistDao = MosikoDatabase.getInstance(context).playlistDAO()
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
     private fun postAction(action: () -> Unit) = Handler(Looper.getMainLooper()).post { action() }
 

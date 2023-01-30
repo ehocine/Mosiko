@@ -1,11 +1,10 @@
 package com.hocel.mosiko.data
 
-import com.hocel.mosiko.data.MusyRepositoryImpl
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.utils.DatabaseUtil
 
-class MusyRepository(private val databaseUtil: DatabaseUtil): MusyRepositoryImpl {
+class MosikoRepository(private val databaseUtil: DatabaseUtil): MosikoRepositoryImpl {
 
     override fun getAllMusic(action: (List<Music>) -> Unit) {
         databaseUtil.getAllMusic(action)

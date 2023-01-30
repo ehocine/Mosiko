@@ -20,13 +20,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.ui.MusicControllerViewModel
-import com.hocel.mosiko.ui.components.PlayAllSongButton
 import com.hocel.mosiko.ui.theme.*
 import com.hocel.mosiko.R
 import com.hocel.mosiko.ui.components.MusicItem
@@ -36,7 +34,7 @@ import com.hocel.mosiko.ui.components.ScanMusicProgressIndicator
 //TODO: scan music on start
 // Add refresh button to rescan
 @OptIn(
-    ExperimentalFoundationApi::class, ExperimentalUnitApi::class
+    ExperimentalFoundationApi::class
 )
 @Composable
 fun SongPagerScreen(
@@ -77,7 +75,6 @@ fun SongPagerScreen(
                             modifier = Modifier
                                 .size(72.dp)
                         )
-
                         Text(
                             text = stringResource(id = R.string.no_song),
                             style = typographyDmSans().body1.copy(
@@ -150,12 +147,6 @@ fun SongPagerScreen(
                         )
                         .padding(bottom = 64.dp)
                 ) {
-                    item {
-                        PlayAllSongButton(
-                            musicList = musicList,
-                            musicControllerViewModel = musicControllerViewModel
-                        )
-                    }
                     items(musicList) { music ->
                         MusicItem(
                             music = music,

@@ -5,7 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.hocel.mosiko.database.PlaylistDAO
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 
@@ -18,19 +17,19 @@ import com.hocel.mosiko.model.Playlist
     exportSchema = false
 )
 @TypeConverters(DatabaseTypeConverter::class)
-abstract class MusyDatabase: RoomDatabase() {
+abstract class MosikoDatabase: RoomDatabase() {
 
     abstract fun musicDAO(): MusicDAO
 
     abstract fun playlistDAO(): PlaylistDAO
 
     companion object {
-        private var INSTANCE: MusyDatabase? = null
+        private var INSTANCE: MosikoDatabase? = null
 
-        fun getInstance(context: Context): MusyDatabase {
+        fun getInstance(context: Context): MosikoDatabase {
             if (INSTANCE == null) {
-                synchronized(MusyDatabase::class) {
-                    INSTANCE = Room.databaseBuilder(context, MusyDatabase::class.java, "music.db")
+                synchronized(MosikoDatabase::class) {
+                    INSTANCE = Room.databaseBuilder(context, MosikoDatabase::class.java, "music.db")
                         .fallbackToDestructiveMigration()
                         .build()
                 }

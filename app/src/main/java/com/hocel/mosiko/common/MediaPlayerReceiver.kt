@@ -20,38 +20,22 @@ class MediaPlayerReceiver: BroadcastReceiver() {
             )
         ) {
             MediaPlayerState.ACTION_PLAY -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(
-                        serviceIntent.setAction(MediaPlayerState.ACTION_PLAY)
-                    )
-                } else context.startService(
+                context.startForegroundService(
                     serviceIntent.setAction(MediaPlayerState.ACTION_PLAY)
                 )
             }
             MediaPlayerState.ACTION_PAUSE -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(
-                        serviceIntent.setAction(MediaPlayerState.ACTION_PAUSE)
-                    )
-                } else context.startService(
+                context.startForegroundService(
                     serviceIntent.setAction(MediaPlayerState.ACTION_PAUSE)
                 )
             }
             MediaPlayerState.ACTION_NEXT -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(
-                        serviceIntent.setAction(MediaPlayerState.ACTION_NEXT)
-                    )
-                } else context.startService(
+                context.startForegroundService(
                     serviceIntent.setAction(MediaPlayerState.ACTION_NEXT)
                 )
             }
             MediaPlayerState.ACTION_PREVIOUS -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(
-                        serviceIntent.setAction(MediaPlayerState.ACTION_PREVIOUS)
-                    )
-                } else context.startService(
+                context.startForegroundService(
                     serviceIntent.setAction(MediaPlayerState.ACTION_PREVIOUS)
                 )
             }

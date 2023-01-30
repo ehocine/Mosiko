@@ -26,7 +26,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import com.hocel.mosiko.R
 import com.hocel.mosiko.common.AppDatastore
-import com.hocel.mosiko.data.MusyDestination
+import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.model.MusicControllerState
 import com.hocel.mosiko.MainActivity
 import com.hocel.mosiko.ui.MusicControllerViewModel
@@ -218,7 +218,7 @@ fun HomeScreen(
                     ) {
                         IconButton(
                             onClick = {
-                                navController.navigate(MusyDestination.Search.route) {
+                                navController.navigate(MosikoDestination.Search.route) {
                                     launchSingleTop = true
                                 }
                             },
@@ -241,7 +241,7 @@ fun HomeScreen(
                     selectedTabIndex = pagerState.currentPage,
                     edgePadding = 8.dp,
                     divider = {},
-                    indicator = { _ ->
+                    indicator = {
                         // TODO: 05/01/2022 pagerState.currentPage move to last index when screen is on (onStart),
                         //  (cause "Cannot round NaN value" if use indicator)
 //                        TabRowDefaults.Indicator(
@@ -275,7 +275,7 @@ fun HomeScreen(
                                 scope.launch {
                                     pagerState.animateScrollToPage(index)
                                 }
-                            },
+                            }
                         )
                     }
                 }

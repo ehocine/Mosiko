@@ -39,7 +39,6 @@ import com.hocel.mosiko.ui.theme.*
 import com.hocel.mosiko.utils.minimumTouchTargetSize
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.compose.material.Card
 
 @Composable
 fun TransparentButton(
@@ -199,7 +198,7 @@ fun MusicItem(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(top = 16.dp)
+                            .padding(top = 4.dp)
                             .wrapContentSize(Alignment.BottomStart)
                     ) {
                         Icon(
@@ -211,7 +210,7 @@ fun MusicItem(
                             },
                             contentDescription = null,
                             modifier = Modifier
-                                .size(14.dp)
+                                .size(13.dp)
                         )
 
                         Text(
@@ -231,7 +230,6 @@ fun MusicItem(
                     }
                 }
             }
-
             if (showTrailingIcon) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -242,7 +240,6 @@ fun MusicItem(
                         .weight(0.08f, fill = false)
                 )
             }
-
         }
     }
 }
@@ -260,7 +257,7 @@ fun AlbumItem(
 
     val context = LocalContext.current
 
-    var musicIndexForAlbumThumbnail by remember { mutableStateOf(0) }
+    val musicIndexForAlbumThumbnail by remember { mutableStateOf(0) }
 
     Card(
         elevation = 0.dp,
@@ -358,7 +355,7 @@ fun PlaylistItem(
 ) {
     val context = LocalContext.current
 
-    var musicIndexForAlbumThumbnail by remember { mutableStateOf(0) }
+    val musicIndexForAlbumThumbnail by remember { mutableStateOf(0) }
 
     Card(
         elevation = 0.dp,
@@ -459,88 +456,6 @@ fun PlaylistItem(
 }
 
 @Composable
-fun PlayAllSongButton(
-    musicList: List<Music>,
-    musicControllerViewModel: MusicControllerViewModel
-) {
-    AnimatedVisibility(
-        visible = musicList.isNotEmpty(),
-        enter = slideInVertically(
-            animationSpec = tween(800),
-            initialOffsetY = { fullHeight -> -fullHeight }
-        ),
-        exit = slideOutVertically(
-            animationSpec = tween(800),
-            targetOffsetY = { fullHeight -> -fullHeight }
-        ),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(
-                        indication = rememberRipple(color = Color.Transparent),
-                        interactionSource = MutableInteractionSource(),
-                        onClick = {
-                            musicControllerViewModel.playAll(musicList)
-                        }
-                    )
-                    .padding(bottom = 16.dp, top = 8.dp, start = 8.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(RoundedCornerShape(100))
-                        .background(sunset_orange)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_play_filled_rounded),
-                        tint = white,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(14.dp)
-                            .align(Alignment.Center)
-                    )
-                }
-
-                Text(
-                    text = stringResource(id = R.string.play_all),
-                    style = typographyDmSans().body1.copy(
-                        fontSize = TextUnit(14f, TextUnitType.Sp),
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                )
-
-                Text(
-                    text = "${musicList.size} ${stringResource(id = R.string.song).lowercase()}",
-                    style = typographyDmSans().body1.copy(
-                        color = typographyDmSans().body1.color.copy(alpha = 0.6f),
-                        fontSize = TextUnit(14f, TextUnitType.Sp),
-                        fontWeight = FontWeight.Light
-                    ),
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                )
-            }
-
-            Divider(
-                color = background_content_dark,
-                thickness = 1.dp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-            )
-        }
-    }
-}
-
-@Composable
 fun SetTimerSlider(
     value: Float,
     onValueChange: (Float) -> Unit,
@@ -587,15 +502,6 @@ fun SetTimerSlider(
             )
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SetTimerSliderPreview() {
-    SetTimerSlider(
-        value = 90f,
-        onValueChange = {}
-    )
 }
 
 @Preview(showBackground = true)

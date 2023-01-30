@@ -34,7 +34,6 @@ import com.hocel.mosiko.ui.theme.*
 import com.hocel.mosiko.utils.ComposeUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @OptIn(
     ExperimentalMaterialApi::class,
@@ -84,7 +83,6 @@ fun MiniMusicPlayer(
                 progress = run {
                     val normalizedProgress = currentProgress.toFloat() / currentMusicPlayed.duration
 
-                    Timber.i("Normalized Progress: $normalizedProgress")
                     return@run normalizedProgress
                 },
                 modifier = Modifier

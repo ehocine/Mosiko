@@ -3,18 +3,17 @@ package com.hocel.mosiko.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.hocel.mosiko.data.MusyRepositoryImpl
+import com.hocel.mosiko.data.MosikoRepositoryImpl
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import dagger.hilt.android.lifecycle.HiltViewModel
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repository: MusyRepositoryImpl
+    private val repository: MosikoRepositoryImpl
 ): ViewModel() {
 
     private val _filteredMusic = MutableLiveData<List<Music>>()
@@ -104,10 +103,6 @@ class SearchViewModel @Inject constructor(
                     }
                 }
             }
-
-            Timber.i("filtered music: ${filteredMusic.value}")
-            Timber.i("filtered artist: ${filteredArtist.value}")
-            Timber.i("filtered album: ${filteredAlbum.value}")
         }
     }
 

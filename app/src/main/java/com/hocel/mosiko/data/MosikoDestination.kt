@@ -1,6 +1,6 @@
 package com.hocel.mosiko.data
 
-object MusyDestination {
+object MosikoDestination {
 
     private const val HomeScreen = "Home"
 

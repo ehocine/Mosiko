@@ -14,7 +14,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.palette.graphics.Palette
-import timber.log.Timber
 import java.io.FileNotFoundException
 import  com.hocel.mosiko.R
 
@@ -33,7 +32,6 @@ object ComposeUtils {
                         ).copy(Bitmap.Config.RGBA_F16, true)
                     } else MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
                 } catch (e: FileNotFoundException) {
-                    Timber.e(e)
                     return@run ContextCompat.getDrawable(context, R.drawable.ic_music_unknown)!!
                         .toBitmap()
                 }

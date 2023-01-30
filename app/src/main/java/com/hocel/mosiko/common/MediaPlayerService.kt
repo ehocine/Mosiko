@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.MediaMetadata
 import android.media.session.MediaSession
@@ -11,11 +12,11 @@ import android.media.session.PlaybackState
 import android.os.Binder
 import android.os.IBinder
 import android.view.KeyEvent
+import com.hocel.mosiko.R
 import com.hocel.mosiko.model.MediaPlayerState
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.utils.AlarmUtil
 import com.hocel.mosiko.utils.NotificationUtil
-import timber.log.Timber
 
 
 class MediaPlayerService : Service() {
@@ -44,7 +45,6 @@ class MediaPlayerService : Service() {
                 if (Intent.ACTION_MEDIA_BUTTON == mediaButtonIntent.action) {
                     val event =
                         mediaButtonIntent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
-
                     when (event!!.keyCode) {
                         KeyEvent.KEYCODE_MEDIA_PLAY -> mediaPLayerAction?.resume()
                         KeyEvent.KEYCODE_MEDIA_PAUSE -> mediaPLayerAction?.pause()
@@ -52,7 +52,6 @@ class MediaPlayerService : Service() {
                         KeyEvent.KEYCODE_MEDIA_PREVIOUS -> mediaPLayerAction?.previous()
                     }
                 }
-
                 return true
             }
         })
@@ -88,7 +87,6 @@ class MediaPlayerService : Service() {
             newState as MediaPlayerState
 
             if (isForegroundService and (newState.duration != 0L)) {
-
                 mediaSession.setPlaybackState(
                     PlaybackState.Builder()
                         .setState(
@@ -99,7 +97,6 @@ class MediaPlayerService : Service() {
                         .setActions(PlaybackState.ACTION_PLAY_PAUSE)
                         .build()
                 )
-
                 mediaSession.setMetadata(
                     MediaMetadata.Builder()
                         .putString(MediaMetadata.METADATA_KEY_TITLE, newState.title)
@@ -109,20 +106,18 @@ class MediaPlayerService : Service() {
                         .putLong(MediaMetadata.METADATA_KEY_DURATION, newState.duration)
                         .build()
                 )
-
                 notificationManager.notify(
                     0,
                     NotificationUtil.notificationMediaPlayer(
                         applicationContext,
-                        Notification.MediaStyle().setMediaSession(mediaSession.sessionToken),
+                        Notification.MediaStyle()
+                            .setShowActionsInCompactView(0, 1, 2)
+                            .setMediaSession(mediaSession.sessionToken),
                         newState
                     )
                 )
-
-                Timber.i("new MediaPLayerState: $newState")
             }
         }
-
         return START_NOT_STICKY
     }
 

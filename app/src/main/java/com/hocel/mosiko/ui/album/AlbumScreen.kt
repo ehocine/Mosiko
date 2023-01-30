@@ -30,7 +30,6 @@ import com.hocel.mosiko.R
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.MusicItem
-import com.hocel.mosiko.ui.components.PlayAllSongButton
 import com.hocel.mosiko.ui.theme.*
 
 @OptIn(ExperimentalUnitApi::class)
@@ -137,14 +136,6 @@ fun AlbumScreen(
                     }
                 }
             }
-
-            item {
-                PlayAllSongButton(
-                    musicList = filteredMusicList,
-                    musicControllerViewModel = musicControllerViewModel
-                )
-            }
-
             items(filteredMusicList) { music ->
                 MusicItem(
                     music = music,

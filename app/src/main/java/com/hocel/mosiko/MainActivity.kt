@@ -12,6 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.hocel.mosiko.common.AppDatastore
@@ -32,7 +33,6 @@ import com.hocel.mosiko.utils.DatabaseUtil
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.MusyApp
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -75,25 +75,19 @@ class MainActivity : ComponentActivity(), ServiceConnection {
     private val permissionResultLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (!granted) {
-                "You must grant permission!".toast(this, Toast.LENGTH_LONG)
+                "Permission is required in order to access music".toast(this, Toast.LENGTH_LONG)
                 finishAffinity()
             } else {
                 Handler(Looper.getMainLooper()).postDelayed({
                     // relaunch app
                     startActivity(Intent(this, MainActivity::class.java))
                 }, 800)
-
                 finishAffinity()
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (BuildConfig.DEBUG) Timber.plant(object : Timber.DebugTree() {
-            override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-                super.log(priority, "DEBUG_$tag", message, t)
-            }
-        })
 
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -128,7 +122,6 @@ class MainActivity : ComponentActivity(), ServiceConnection {
                 defaultPlaylist.forEach { playlist ->
                     if (!playlistList.containBy { it.id == playlist.id }) {
                         databaseUtil.insertPlaylist(playlist) {
-                            Timber.i("playlist \"${playlist.name}\" created")
                         }
                     }
                 }
@@ -136,6 +129,13 @@ class MainActivity : ComponentActivity(), ServiceConnection {
 
             setContent {
                 MusyTheme {
+                    //Scanning Music on start
+                    LaunchedEffect(key1 = true) {
+                        scanMusicViewModel.scanLocalSong(this@MainActivity)
+                        {
+                            homeViewModel.refreshSongsList.value = true
+                        }
+                    }
                     Surface(color = MaterialTheme.colors.background) {
                         MusyApp(
                             datastore = datastore,
@@ -175,7 +175,6 @@ class MainActivity : ComponentActivity(), ServiceConnection {
             unbindService(this)
         } catch (e: Exception) {
             e.printStackTrace()
-            Timber.e(e, "Service not registered")
         }
     }
 

@@ -3,7 +3,7 @@ package com.hocel.mosiko.ui.home
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import com.hocel.mosiko.MosikoApplication
-import com.hocel.mosiko.data.MusyRepositoryImpl
+import com.hocel.mosiko.data.MosikoRepositoryImpl
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.utils.AppUtils
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val application: MosikoApplication,
-    private val repository: MusyRepositoryImpl
+    private val repository: MosikoRepositoryImpl
 ) : ViewModel() {
 
     private val _musicList = MutableLiveData(emptyList<Music>())

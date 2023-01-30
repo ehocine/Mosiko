@@ -1,5 +1,6 @@
 package com.hocel.mosiko.ui.artist
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,9 +21,9 @@ import androidx.navigation.NavHostController
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.MusicItem
-import com.hocel.mosiko.ui.components.PlayAllSongButton
 import com.hocel.mosiko.ui.theme.*
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalUnitApi::class)
 @Composable
 fun ArtistScreen(
@@ -79,13 +80,6 @@ fun ArtistScreen(
             modifier = Modifier
                 .padding(bottom = 64.dp)
         ) {
-            item {
-                PlayAllSongButton(
-                    musicList = filteredMusicList,
-                    musicControllerViewModel = musicControllerViewModel
-                )
-            }
-
             items(filteredMusicList) { music ->
                 MusicItem(
                     music = music,

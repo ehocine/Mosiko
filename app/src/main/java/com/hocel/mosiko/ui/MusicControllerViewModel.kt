@@ -16,7 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.hocel.mosiko.MosikoApplication
 import com.hocel.mosiko.common.AppDatastore
 import com.hocel.mosiko.common.MediaPlayerService
-import com.hocel.mosiko.data.MusyRepositoryImpl
+import com.hocel.mosiko.data.MosikoRepositoryImpl
 import com.hocel.mosiko.model.MediaPlayerState
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.MusicControllerState
@@ -30,7 +30,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.burnoutcrew.reorderable.ItemPosition
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import com.hocel.mosiko.utils.AppUtils.move
@@ -40,7 +39,7 @@ import com.hocel.mosiko.R
 @HiltViewModel
 class MusicControllerViewModel @Inject constructor(
     private val application: MosikoApplication,
-    private val repository: MusyRepositoryImpl,
+    private val repository: MosikoRepositoryImpl,
     private val appDatastore: AppDatastore
 ) : ViewModel() {
 
@@ -167,11 +166,8 @@ class MusicControllerViewModel @Inject constructor(
 
                     repository.updatePlaylist(favoritePlaylist) {
                         _isMusicFavorite.value = favorite
-                        Timber.i("Playlist \"${favoritePlaylist.name}\" Updated")
                     }
                 }
-
-                Timber.i("Music Updated")
             }
         }
     }
@@ -227,8 +223,6 @@ class MusicControllerViewModel @Inject constructor(
 
         _isVolumeMuted.value = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0
         _currentVolume.value = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
-
-        Timber.i("onVolumeChange")
     }
 
     /**
@@ -334,7 +328,6 @@ class MusicControllerViewModel @Inject constructor(
     fun playAll(musicList: List<Music>) {
         _playlist.value = musicList
         play(_playlist.value!![0].audioID, shufflePlaylist = false)
-        Timber.i("current playlist: ${_playlist.value}")
     }
 
     fun playLastMusic() {

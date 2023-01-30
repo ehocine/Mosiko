@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.hocel.mosiko.data.MusyDestination
+import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.ui.components.AlbumItem
 import com.hocel.mosiko.ui.theme.*
@@ -84,7 +84,7 @@ fun AlbumPagerScreen(
                 AlbumItem(
                     musicList = musicPair.second,
                     onClick = {
-                        val route = MusyDestination.Album.createRoute(
+                        val route = MosikoDestination.Album.createRoute(
                             albumList[albumList.keys.toList()[i]]?.get(0)?.albumID
                                 ?: Music.unknown.albumID
                         )

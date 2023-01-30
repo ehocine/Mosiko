@@ -21,8 +21,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.hocel.mosiko.R
-import com.hocel.mosiko.data.MusyDestination
-import com.hocel.mosiko.ui.home.HomeViewModel
+import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.ui.theme.*
 
 @OptIn(ExperimentalUnitApi::class)
@@ -93,7 +92,7 @@ fun ArtistPagerScreen(
 
                 IconButton(
                     onClick = {
-                        val route = MusyDestination.Artist.createRoute(musicPair.second[0].artist)
+                        val route = MosikoDestination.Artist.createRoute(musicPair.second[0].artist)
                         navController.navigate(route) {
                             launchSingleTop = true
                         }

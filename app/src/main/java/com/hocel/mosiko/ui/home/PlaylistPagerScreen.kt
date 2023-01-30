@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.hocel.mosiko.R
-import com.hocel.mosiko.data.MusyDestination
+import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.PlaylistItem
@@ -237,7 +237,7 @@ fun PlaylistPagerScreen(
                     PlaylistItem(
                         playlist = playlist,
                         onClick = {
-                            val route = MusyDestination.Playlist.createRoute(playlist.id)
+                            val route = MosikoDestination.Playlist.createRoute(playlist.id)
                             navController.navigate(route) {
                                 launchSingleTop = true
                             }

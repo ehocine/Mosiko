@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.hocel.mosiko.R
-import com.hocel.mosiko.data.MusyDestination
+import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.AlbumItem
@@ -299,7 +299,7 @@ fun SearchScreen(
 
                         IconButton(
                             onClick = {
-                                val route = MusyDestination.Artist.createRoute(music.artist)
+                                val route = MosikoDestination.Artist.createRoute(music.artist)
                                 navController.navigate(route) {
                                     launchSingleTop = true
                                 }
@@ -361,7 +361,7 @@ fun SearchScreen(
                     AlbumItem(
                         musicList = albumList[albumList.keys.toList()[i]]!!,
                         onClick = {
-                            val route = MusyDestination.Album.createRoute(
+                            val route = MosikoDestination.Album.createRoute(
                                 albumList[albumList.keys.toList()[i]]?.get(0)?.albumID ?: Music.unknown.albumID
                             )
 

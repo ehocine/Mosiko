@@ -3,7 +3,7 @@ package com.hocel.mosiko.di
 import android.content.Context
 import com.hocel.mosiko.MosikoApplication
 import com.hocel.mosiko.common.AppDatastore
-import com.hocel.mosiko.data.MusyRepository
+import com.hocel.mosiko.data.MosikoRepository
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.album.AlbumViewModel
 import com.hocel.mosiko.ui.artist.ArtistViewModel
@@ -41,44 +41,44 @@ object ApplicationModule {
     @Provides
     fun provideHomeViewModel(application: MosikoApplication): HomeViewModel = HomeViewModel(
         application,
-        MusyRepository(provideDatabaseUtil(application))
+        MosikoRepository(provideDatabaseUtil(application))
     )
 
     @Singleton
     @Provides
     fun provideScanMusicViewModel(application: MosikoApplication): ScanMusicViewModel = ScanMusicViewModel(
-        MusyRepository(provideDatabaseUtil(application))
+        MosikoRepository(provideDatabaseUtil(application))
     )
 
     @Singleton
     @Provides
     fun provideSearchViewModel(application: MosikoApplication): SearchViewModel = SearchViewModel(
-        MusyRepository(provideDatabaseUtil(application))
+        MosikoRepository(provideDatabaseUtil(application))
     )
 
     @Singleton
     @Provides
     fun provideArtistViewModel(application: MosikoApplication): ArtistViewModel = ArtistViewModel(
-        MusyRepository(provideDatabaseUtil(application))
+        MosikoRepository(provideDatabaseUtil(application))
     )
 
     @Singleton
     @Provides
     fun provideAlbumViewModel(application: MosikoApplication): AlbumViewModel = AlbumViewModel(
-        MusyRepository(provideDatabaseUtil(application))
+        MosikoRepository(provideDatabaseUtil(application))
     )
 
     @Singleton
     @Provides
     fun providePlaylistViewModel(application: MosikoApplication): PlaylistViewModel = PlaylistViewModel(
-        MusyRepository(provideDatabaseUtil(application))
+        MosikoRepository(provideDatabaseUtil(application))
     )
 
     @Singleton
     @Provides
     fun provideMusicControllerViewModel(application: MosikoApplication): MusicControllerViewModel = MusicControllerViewModel(
         application,
-        MusyRepository(provideDatabaseUtil(application)),
+        MosikoRepository(provideDatabaseUtil(application)),
         provideAppDatastore(application)
     )
 

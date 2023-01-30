@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.hocel.mosiko.common.AppDatastore
-import com.hocel.mosiko.data.MusyDestination
+import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.ui.album.AlbumScreen
@@ -38,13 +38,13 @@ fun MusyNavigation(
 ) {
     NavHost(
         navController = navigationController,
-        startDestination = MusyDestination.Home.route,
+        startDestination = MosikoDestination.Home.route,
         modifier = Modifier
             .fillMaxSize()
             .then(modifier)
     ) {
 
-        composable(MusyDestination.Home.route) {
+        composable(MosikoDestination.Home.route) {
             HomeScreen(
                 navController = navigationController,
                 musicControllerViewModel = musicControllerViewModel,
@@ -53,7 +53,7 @@ fun MusyNavigation(
             )
         }
 
-        composable(MusyDestination.Search.route) {
+        composable(MosikoDestination.Search.route) {
             SearchScreen(
                 navController = navigationController,
                 searchViewModel = searchViewModel,
@@ -62,7 +62,7 @@ fun MusyNavigation(
         }
 
         composable(
-            route = MusyDestination.SearchSong.route,
+            route = MosikoDestination.SearchSong.route,
             arguments = listOf(
                 navArgument("playlistID") {
                     type = NavType.IntType
@@ -79,7 +79,7 @@ fun MusyNavigation(
         }
 
         composable(
-            route = MusyDestination.Artist.route,
+            route = MosikoDestination.Artist.route,
             arguments = listOf(
                 navArgument("artistName") {
                     type = NavType.StringType
@@ -96,7 +96,7 @@ fun MusyNavigation(
         }
 
         composable(
-            route = MusyDestination.Album.route,
+            route = MosikoDestination.Album.route,
             arguments = listOf(
                 navArgument("albumID") {
                     type = NavType.StringType
@@ -113,7 +113,7 @@ fun MusyNavigation(
         }
 
         composable(
-            route = MusyDestination.Playlist.route,
+            route = MosikoDestination.Playlist.route,
             arguments = listOf(
                 navArgument("playlistID") {
                     type = NavType.IntType

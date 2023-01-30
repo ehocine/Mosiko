@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.hocel.mosiko.data.MusyDestination
+import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.MusicControllerState
 import com.hocel.mosiko.ui.theme.background_dark
@@ -64,7 +64,7 @@ fun MusicScreenMoreOptionsSheetContent(
                         onClick = {
                             when (pair.first) {
                                 moreOptionItems[0].first -> {
-                                    val route = MusyDestination.Artist.createRoute(
+                                    val route = MosikoDestination.Artist.createRoute(
                                         currentMusicPlayed.artist
                                     )
 
@@ -79,7 +79,7 @@ fun MusicScreenMoreOptionsSheetContent(
                                     }
                                 }
                                 moreOptionItems[1].first -> {
-                                    val route = MusyDestination.Album.createRoute(
+                                    val route = MosikoDestination.Album.createRoute(
                                         currentMusicPlayed.albumID
                                     )
                                     scope.launch {

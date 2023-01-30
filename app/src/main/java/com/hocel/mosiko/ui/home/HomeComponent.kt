@@ -44,7 +44,9 @@ fun PlaylistList(
 ) {
 
     val scope = rememberCoroutineScope()
-    val state = rememberReorderState()
+    val state = rememberReorderableLazyListState(onMove = { oldPos, newPos ->
+        musicControllerViewModel.onPlaylistReordered(oldPos, newPos)
+    })
 
     musicControllerViewModel.onNext = { currentMusicIndex ->
         scope.launch {
@@ -62,29 +64,26 @@ fun PlaylistList(
         state = state.listState,
         modifier = Modifier
             .reorderable(
-                state = state,
-                onMove = { oldPos, newPos ->
-                    musicControllerViewModel.onPlaylistReordered(oldPos, newPos)
-                }
+                state = state
             )
             .detectReorderAfterLongPress(state)
     ) {
         items(items, key = { it.audioID }) { music ->
-            MusicItem(
-                music = music,
-                itemBackgroundColor = itemBackgroundColor,
-                isMusicPlayed = currentMusicPlayed.audioID == music.audioID,
-                onClick = {
-                    if (currentMusicPlayed.audioID != music.audioID) {
-                        musicControllerViewModel.play(music.audioID, shufflePlaylist = false)
-                        scope.launch {
-                            state.listState.animateScrollToItem(musicControllerViewModel.currentMusicPlayedIndexInPlaylist())
+            ReorderableItem(state, key = music) {
+                MusicItem(
+                    music = music,
+                    itemBackgroundColor = itemBackgroundColor,
+                    isMusicPlayed = currentMusicPlayed.audioID == music.audioID,
+                    onClick = {
+                        if (currentMusicPlayed.audioID != music.audioID) {
+                            musicControllerViewModel.play(music.audioID, shufflePlaylist = false)
+                            scope.launch {
+                                state.listState.animateScrollToItem(musicControllerViewModel.currentMusicPlayedIndexInPlaylist())
+                            }
                         }
                     }
-                },
-                modifier = Modifier
-                    .draggedItem(state.offsetByKey(music.audioID))
-            )
+                )
+            }
         }
     }
 }

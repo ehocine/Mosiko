@@ -36,12 +36,11 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.hocel.mosiko.R
-import com.hocel.mosiko.data.MusyDestination
+import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.MusicItem
-import com.hocel.mosiko.ui.components.PlayAllSongButton
 import com.hocel.mosiko.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -386,13 +385,6 @@ private fun ScreenContent(
                         .fillMaxWidth()
                         .padding(top = 8.dp)
                 ) {
-                    item {
-                        PlayAllSongButton(
-                            musicList = playlist.musicList,
-                            musicControllerViewModel = musicControllerViewModel
-                        )
-                    }
-
                     items(playlist.musicList) { music ->
                         MusicItem(
                             music = music,
@@ -442,7 +434,7 @@ private fun ScreenContent(
                                 contentColor = Color.Transparent
                             ),
                             onClick = {
-                                val route = MusyDestination.SearchSong.createRoute(playlist.id)
+                                val route = MosikoDestination.SearchSong.createRoute(playlist.id)
                                 navController.navigate(route) {
                                     launchSingleTop = true
                                 }

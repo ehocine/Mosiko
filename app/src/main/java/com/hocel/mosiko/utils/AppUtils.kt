@@ -16,20 +16,6 @@ object AppUtils {
         const val SORT_MUSIC_BY_DATE_ADDED = "com.hocel.mosiko:prefVal:sort_music_by_date_added"
     }
 
-    /**
-     * Convert element.
-     * @author kafri8889
-     */
-    fun <T, R> Collection<T>.convert(to: (T) -> R): List<R> {
-        val result = ArrayList<R>()
-        this.forEach { result.add(to(it)) }
-        return result
-    }
-
-    /**
-     * Move element.
-     * @author kafri8889
-     */
     fun <T> Collection<T>.move(fromIndex: Int, toIndex: Int): List<T> {
         if (fromIndex == toIndex) return this.toList()
         return ArrayList(this).apply {
@@ -39,53 +25,32 @@ object AppUtils {
         }
     }
 
-    /**
-     * Get index element of given predicate.
-     * @author kafri8889
-     */
     fun <T> Collection<T>.indexOf(predicate: (T) -> Boolean): Int {
         this.forEachIndexed { i, t ->
             if (predicate(t)) return i
         }
-
         return -1
     }
 
-    /**
-     * Remove element by given [predicate].
-     * @author kafri8889
-     */
     fun <T> Collection<T>.removeBy(predicate: (T) -> Boolean): List<T> {
         val result = ArrayList(this)
-
         this.forEachIndexed { i, t ->
             if (predicate(t)) result.removeAt(i)
         }
-
         return result
     }
 
-    /**
-     * Checks if the specified element is contained in this collection by given [predicate].
-     * @author kafri8889
-     */
     fun <T> Collection<T>.containBy(predicate: (T) -> Boolean): Boolean {
         this.forEach {
             if (predicate(it)) return true
         }
-
         return false
     }
 
-    /**
-     * Return a item containing only elements matching the given [predicate].
-     * @author kafri8889
-     */
     fun <T> Collection<T>.get(predicate: (T) -> Boolean): T? {
         this.forEach {
             if (predicate(it)) return it
         }
-
         return null
     }
 

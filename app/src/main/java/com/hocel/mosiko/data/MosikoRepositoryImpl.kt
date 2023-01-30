@@ -3,7 +3,7 @@ package com.hocel.mosiko.data
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 
-interface MusyRepositoryImpl {
+interface MosikoRepositoryImpl {
 
     fun getAllMusic(action: (List<Music>) -> Unit)
 

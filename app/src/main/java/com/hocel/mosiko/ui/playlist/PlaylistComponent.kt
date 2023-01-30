@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.hocel.mosiko.R
-import com.hocel.mosiko.data.MusyDestination
+import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.ui.MusicControllerViewModel
@@ -184,7 +184,7 @@ fun PlaylistMoreOptionSheetContent(
                                 when (pair.first) {
                                     moreOptionItems[0].first -> {
                                         val route =
-                                            MusyDestination.Artist.createRoute(music.artist)
+                                            MosikoDestination.Artist.createRoute(music.artist)
                                         scope.launch {
                                             modalBottomSheetState.hide()
                                             delay(100)
@@ -195,7 +195,7 @@ fun PlaylistMoreOptionSheetContent(
                                     }
                                     moreOptionItems[1].first -> {
                                         val route =
-                                            MusyDestination.Album.createRoute(music.albumID)
+                                            MosikoDestination.Album.createRoute(music.albumID)
                                         scope.launch {
                                             modalBottomSheetState.hide()
                                             delay(100)
