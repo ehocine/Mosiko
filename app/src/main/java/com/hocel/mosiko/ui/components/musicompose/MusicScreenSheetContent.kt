@@ -12,7 +12,10 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +41,7 @@ import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.IconButton
 import com.hocel.mosiko.ui.components.Slider
 import com.hocel.mosiko.ui.components.SliderDefaults
+import com.hocel.mosiko.ui.theme.sunset_orange
 import com.hocel.mosiko.ui.theme.typographyDmSans
 import com.hocel.mosiko.ui.theme.typographySkModernist
 import com.hocel.mosiko.ui.theme.white
@@ -48,7 +52,7 @@ import java.util.concurrent.TimeUnit
 
 @OptIn(
     ExperimentalMaterialApi::class,
-    ExperimentalAnimationApi::class, ExperimentalUnitApi::class,
+    ExperimentalAnimationApi::class,
 )
 @Composable
 fun MusicScreenSheetContent(
@@ -82,8 +86,10 @@ fun MusicScreenSheetContent(
 
     currentMusicDuration = if (isSliderDragged.value) {
         run {
-            val mMusicDurationInMinute = TimeUnit.MILLISECONDS.toMinutes(sliderProgressFromUser.toLong())
-            val mMusicDurationInSecond = TimeUnit.MILLISECONDS.toSeconds(sliderProgressFromUser.toLong()) % 60
+            val mMusicDurationInMinute =
+                TimeUnit.MILLISECONDS.toMinutes(sliderProgressFromUser.toLong())
+            val mMusicDurationInSecond =
+                TimeUnit.MILLISECONDS.toSeconds(sliderProgressFromUser.toLong()) % 60
             "${mMusicDurationInMinute}:${if (mMusicDurationInSecond > 9) mMusicDurationInSecond else "0$mMusicDurationInSecond"}"
         }
     } else "$currentMusicDurationInMinute:${if (currentMusicDurationInSecond > 9) currentMusicDurationInSecond else "0$currentMusicDurationInSecond"}"
@@ -110,7 +116,8 @@ fun MusicScreenSheetContent(
                 Image(
                     painter = rememberAsyncImagePainter(
                         ImageRequest.Builder(LocalContext.current)
-                            .data(data = currentMusicPlayed.albumPath.toUri()).apply(block = fun ImageRequest.Builder.() {
+                            .data(data = currentMusicPlayed.albumPath.toUri())
+                            .apply(block = fun ImageRequest.Builder.() {
                                 error(R.drawable.ic_music_unknown)
                                 placeholder(R.drawable.ic_music_unknown)
                             }).build()
@@ -121,8 +128,6 @@ fun MusicScreenSheetContent(
                         .fillMaxSize()
                 )
             }
-
-
 
             // Title, Artist, Favorite button, More button
             Row(
@@ -156,7 +161,7 @@ fun MusicScreenSheetContent(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = typographyDmSans().body1.copy(
-                            color= white.copy(alpha = 0.7f),
+                            color = white.copy(alpha = 0.7f),
                             fontSize = TextUnit(14f, TextUnitType.Sp),
                             fontWeight = FontWeight.Normal
                         ),
@@ -177,13 +182,13 @@ fun MusicScreenSheetContent(
                             musicControllerViewModel.setMusicFavorite(!isMusicFavorite)
                         },
                     ) {
-                        Image(
-                            painter = painterResource(
-                                id = if (isMusicFavorite) R.drawable.ic_favorite_selected else R.drawable.ic_favorite_unselected
-                            ),
-                            contentDescription = null,
+                        Icon(
+                            imageVector = Icons.Outlined.Favorite,
                             modifier = Modifier
-                                .size(24.dp)
+                                .size(24.dp),
+                            contentDescription = "Favorite icon",
+                            tint = if (isMusicFavorite) sunset_orange else Color.White,
+
                         )
                     }
 
@@ -215,8 +220,6 @@ fun MusicScreenSheetContent(
                 }
             }  // Title, Artist, Favorite button, More button ~
 
-
-
             // Slider, Music duration, Current music duration
             Column(
                 modifier = Modifier
@@ -241,7 +244,10 @@ fun MusicScreenSheetContent(
                     },
                     colors = SliderDefaults.colors(
                         activeTrackColor = ComposeUtils.lightenColor(dominantBackgroundColor, 0.6f),
-                        inactiveTrackColor = ComposeUtils.lightenColor(dominantBackgroundColor, 0.6f).copy(alpha = 0.24f),
+                        inactiveTrackColor = ComposeUtils.lightenColor(
+                            dominantBackgroundColor,
+                            0.6f
+                        ).copy(alpha = 0.24f),
                         thumbColor = ComposeUtils.lightenColor(dominantBackgroundColor, 0.6f)
                     ),
                     interactionSource = sliderInteractionSource,
@@ -267,8 +273,6 @@ fun MusicScreenSheetContent(
                             .align(Alignment.CenterStart)
                     )
 
-
-
                     // Current music duration
                     Text(
                         text = currentMusicDuration,
@@ -282,8 +286,6 @@ fun MusicScreenSheetContent(
                     )
                 }
             }  // Slider, Music duration, Current music duration ~
-
-
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -332,8 +334,6 @@ fun MusicScreenSheetContent(
                     )
                 }
 
-
-
                 IconButton(
                     rippleRadius = 72.dp,
                     onClick = {
@@ -371,8 +371,6 @@ fun MusicScreenSheetContent(
                     }
                 }
 
-
-
                 androidx.compose.material.IconButton(
                     onClick = {
                         musicControllerViewModel.next()
@@ -386,8 +384,6 @@ fun MusicScreenSheetContent(
                         contentDescription = null
                     )
                 }
-
-
 
                 androidx.compose.material.IconButton(
                     onClick = {

@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
@@ -75,7 +76,7 @@ fun SearchScreen(
     }
 
     searchViewModel.filter(query)
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -106,8 +107,8 @@ fun SearchScreen(
                                             query = ""
                                         }
                                     ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.x_mark_outlined_filled),
+                                        Icon(
+                                            imageVector = Icons.Default.Close,
                                             contentDescription = null,
                                             modifier = Modifier
                                                 .size(16.dp)
@@ -362,7 +363,8 @@ fun SearchScreen(
                         musicList = albumList[albumList.keys.toList()[i]]!!,
                         onClick = {
                             val route = MosikoDestination.Album.createRoute(
-                                albumList[albumList.keys.toList()[i]]?.get(0)?.albumID ?: Music.unknown.albumID
+                                albumList[albumList.keys.toList()[i]]?.get(0)?.albumID
+                                    ?: Music.unknown.albumID
                             )
 
                             navController.navigate(route) {

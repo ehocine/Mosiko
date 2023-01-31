@@ -30,9 +30,8 @@ import com.hocel.mosiko.R
 import com.hocel.mosiko.ui.components.MusicItem
 import com.hocel.mosiko.common.ScanMusicViewModel
 import com.hocel.mosiko.ui.components.ScanMusicProgressIndicator
+import com.hocel.mosiko.ui.components.musicompose.LottieAnim
 
-//TODO: scan music on start
-// Add refresh button to rescan
 @OptIn(
     ExperimentalFoundationApi::class
 )
@@ -46,15 +45,10 @@ fun SongPagerScreen(
     val musicList by homeViewModel.musicList.observeAsState(initial = emptyList())
     val currentMusicPlayed by musicControllerViewModel.currentMusicPlayed.observeAsState(initial = Music.unknown)
 
-    val numberMarker = 90
     val scannedMusicInPercent by scanMusicViewModel.scannedMusicInPercent.observeAsState(initial = 0)
 
     val progressAngle by animateFloatAsState(
         targetValue = (scannedMusicInPercent.toFloat() / 100f) * 360f
-    )
-
-    val markerActive by animateFloatAsState(
-        targetValue = (scannedMusicInPercent.toFloat() / 100) * numberMarker
     )
 
     when (musicList.isEmpty()) {
@@ -68,13 +62,7 @@ fun SongPagerScreen(
             ) {
                 when (scanMusicViewModel.songsScanState.value) {
                     false -> {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_audio_square_outlined),
-                            tint = if (isSystemInDarkTheme()) background_content_dark else background_content_light,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(72.dp)
-                        )
+                        LottieAnim(modifier = Modifier.size(200.dp), lottie = R.raw.empty_state)
                         Text(
                             text = stringResource(id = R.string.no_song),
                             style = typographyDmSans().body1.copy(
@@ -127,8 +115,6 @@ fun SongPagerScreen(
                     }
                     else -> {
                         ScanMusicProgressIndicator(
-                            numberMarker = numberMarker,
-                            markerActive = markerActive,
                             scannedMusicInPercent = scannedMusicInPercent,
                             progressAngle = progressAngle
                         )

@@ -1,17 +1,27 @@
 package com.hocel.mosiko.common
 
-import android.app.Notification
-import android.app.NotificationManager
+import android.Manifest
 import android.app.Service
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.media.AudioManager
 import android.media.MediaMetadata
-import android.media.session.MediaSession
-import android.media.session.PlaybackState
+import android.net.Uri
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
+import android.provider.MediaStore
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import android.view.KeyEvent
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.media.app.NotificationCompat
 import com.hocel.mosiko.R
 import com.hocel.mosiko.model.MediaPlayerState
 import com.hocel.mosiko.model.Music
@@ -24,9 +34,9 @@ class MediaPlayerService : Service() {
     private var mediaPLayerAction: MediaPlayerAction? = null
 
     private val mBinder: IBinder = MediaPlayerServiceBinder()
-    private lateinit var mediaSession: MediaSession
-    private lateinit var mediaStyle: Notification.MediaStyle
-    private lateinit var notificationManager: NotificationManager
+    private lateinit var mediaSession: MediaSessionCompat
+    private lateinit var mediaStyle: NotificationCompat.MediaStyle
+    private lateinit var notificationManager: NotificationManagerCompat
     private lateinit var audioManager: AudioManager
 
     private var isForegroundService = false
@@ -34,12 +44,13 @@ class MediaPlayerService : Service() {
     override fun onCreate() {
         super.onCreate()
         audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager = NotificationManagerCompat.from(this)
 
-        mediaSession = MediaSession(this, "MediaPlayerSessionService")
-        mediaStyle = Notification.MediaStyle().setMediaSession(mediaSession.sessionToken)
+//        mediaSession = MediaSession(this, "MediaPlayerSessionService")
+        mediaSession = MediaSessionCompat(this, "MediaPlayerSessionService")
+        mediaStyle = NotificationCompat.MediaStyle().setMediaSession(mediaSession.sessionToken)
 
-        mediaSession.setCallback(object : MediaSession.Callback() {
+        mediaSession.setCallback(object : MediaSessionCompat.Callback() {
             override fun onMediaButtonEvent(mediaButtonIntent: Intent): Boolean {
 
                 if (Intent.ACTION_MEDIA_BUTTON == mediaButtonIntent.action) {
@@ -57,7 +68,7 @@ class MediaPlayerService : Service() {
         })
 
         mediaSession.setMetadata(
-            MediaMetadata.Builder()
+            MediaMetadataCompat.Builder()
                 .putString(MediaMetadata.METADATA_KEY_TITLE, Music.unknown.title)
                 .putString(MediaMetadata.METADATA_KEY_ALBUM, Music.unknown.album)
                 .putString(MediaMetadata.METADATA_KEY_ARTIST, Music.unknown.artist)
@@ -88,17 +99,17 @@ class MediaPlayerService : Service() {
 
             if (isForegroundService and (newState.duration != 0L)) {
                 mediaSession.setPlaybackState(
-                    PlaybackState.Builder()
+                    PlaybackStateCompat.Builder()
                         .setState(
-                            if (newState.isMusicPlayed) PlaybackState.STATE_PLAYING else PlaybackState.STATE_PAUSED,
+                            if (newState.isMusicPlayed) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED,
                             newState.currentPosition,
                             1f
                         )
-                        .setActions(PlaybackState.ACTION_PLAY_PAUSE)
+                        .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
                         .build()
                 )
                 mediaSession.setMetadata(
-                    MediaMetadata.Builder()
+                    MediaMetadataCompat.Builder()
                         .putString(MediaMetadata.METADATA_KEY_TITLE, newState.title)
                         .putString(MediaMetadata.METADATA_KEY_ALBUM, newState.album)
                         .putString(MediaMetadata.METADATA_KEY_ARTIST, newState.artist)
@@ -106,11 +117,26 @@ class MediaPlayerService : Service() {
                         .putLong(MediaMetadata.METADATA_KEY_DURATION, newState.duration)
                         .build()
                 )
+
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return 0
+                }
                 notificationManager.notify(
                     0,
                     NotificationUtil.notificationMediaPlayer(
                         applicationContext,
-                        Notification.MediaStyle()
+                        NotificationCompat.MediaStyle()
                             .setShowActionsInCompactView(0, 1, 2)
                             .setMediaSession(mediaSession.sessionToken),
                         newState

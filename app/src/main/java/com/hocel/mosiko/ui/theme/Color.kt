@@ -1,5 +1,7 @@
 package com.hocel.mosiko.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val white = Color(0xFFFFFFFF)
@@ -50,3 +52,12 @@ val error_light = Color(0xFFB00020)
 
 val on_error_dark = pure_black
 val on_error_light = white
+
+
+val scanMusicColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.White else Color.Black
+
+val progressIndicatorColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.White else Color.Black

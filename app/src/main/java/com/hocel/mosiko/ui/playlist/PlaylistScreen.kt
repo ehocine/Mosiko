@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -149,7 +148,7 @@ fun PlaylistScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(
     ExperimentalMaterialApi::class,
-    ExperimentalFoundationApi::class, ExperimentalUnitApi::class
+    ExperimentalFoundationApi::class
 )
 @Composable
 private fun ScreenContent(
@@ -184,7 +183,7 @@ private fun ScreenContent(
                             contentDescription = null
                         )
                     }
-                },
+                }
             )
         }
     ) {
@@ -243,8 +242,6 @@ private fun ScreenContent(
                         .size(160.dp)
                         .clip(RoundedCornerShape(24.dp))
                 )
-
-
 
                 // Playlist name, button edit, button delete
                 Column(
@@ -398,7 +395,6 @@ private fun ScreenContent(
                                             playlistViewModel.setSheetStateContent(
                                                 PlaylistViewModel.PlaylistScreenSheetStateContent.PlaylistMoreOptionSheetContent
                                             )
-
                                             modalBottomSheetState.show()
                                         }
                                     }
@@ -418,7 +414,6 @@ private fun ScreenContent(
                             }
                         )
                     }
-
                     item {
                         Button(
                             contentPadding = PaddingValues(0.dp),
@@ -462,7 +457,6 @@ private fun ScreenContent(
                     }
                 }
             }
-
         }
-    }  // Scaffold ~
+    }
 }

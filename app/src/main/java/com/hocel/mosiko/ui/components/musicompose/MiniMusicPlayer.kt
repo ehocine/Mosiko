@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalMaterialApi::class,
-    ExperimentalAnimationApi::class, ExperimentalUnitApi::class
+    ExperimentalAnimationApi::class
 )
 @Composable
 fun MiniMusicPlayer(
@@ -78,12 +77,10 @@ fun MiniMusicPlayer(
             )
 
             LinearProgressIndicator(
-                color = sunset_orange,
+                color = progressIndicatorColor,
                 backgroundColor = Color.Transparent,
                 progress = run {
-                    val normalizedProgress = currentProgress.toFloat() / currentMusicPlayed.duration
-
-                    return@run normalizedProgress
+                    return@run currentProgress.toFloat() / currentMusicPlayed.duration
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,7 +93,6 @@ fun MiniMusicPlayer(
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
-
             Row(
                 modifier = Modifier
                     .weight(0.6f)

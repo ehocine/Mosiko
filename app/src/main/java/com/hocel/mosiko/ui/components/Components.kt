@@ -425,18 +425,19 @@ fun PlaylistItem(
                         fontWeight = FontWeight.SemiBold
                     )
                 )
-
-                Text(
-                    text = "${playlist.musicList.size} ${stringResource(id = R.string.song).lowercase()}",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = typographySkModernist().body1.copy(
-                        color = typographySkModernist().body1.color.copy(alpha = 0.7f),
-                        fontSize = TextUnit(14f, TextUnitType.Sp),
-                    ),
-                    modifier = Modifier
-                        .padding(top = 6.dp)
-                )
+                playlist.musicList.size.let {
+                    Text(
+                        text = "$it " + if (it > 1) "songs" else "song",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = typographySkModernist().body1.copy(
+                            color = typographySkModernist().body1.color.copy(alpha = 0.7f),
+                            fontSize = TextUnit(14f, TextUnitType.Sp),
+                        ),
+                        modifier = Modifier
+                            .padding(top = 6.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))

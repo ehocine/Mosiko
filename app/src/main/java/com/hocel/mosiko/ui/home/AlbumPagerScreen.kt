@@ -27,6 +27,7 @@ import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.ui.components.AlbumItem
 import com.hocel.mosiko.ui.theme.*
 import com.hocel.mosiko.R
+import com.hocel.mosiko.ui.components.musicompose.LottieAnim
 
 
 @OptIn(
@@ -50,14 +51,7 @@ fun AlbumPagerScreen(
                 .fillMaxSize()
                 .padding(bottom = 64.dp)
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_audio_square_outlined),
-                tint = if (isSystemInDarkTheme()) background_content_dark else background_content_light,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(72.dp)
-            )
-
+            LottieAnim(modifier = Modifier.size(200.dp), lottie = R.raw.empty_state)
             Text(
                 text = stringResource(id = R.string.no_album),
                 style = typographyDmSans().body1.copy(
