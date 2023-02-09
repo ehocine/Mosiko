@@ -4,9 +4,9 @@ import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.utils.DatabaseUtil
 
-class MosikoRepository(private val databaseUtil: DatabaseUtil): MosikoRepositoryImpl {
+class MosikoRepository(private val databaseUtil: DatabaseUtil) : MosikoRepositoryImpl {
 
-    override fun getAllMusic(action: (List<Music>) -> Unit) {
+    override fun getAllMusic(action: (MutableList<Music>) -> Unit) {
         databaseUtil.getAllMusic(action)
     }
 
@@ -23,7 +23,7 @@ class MosikoRepository(private val databaseUtil: DatabaseUtil): MosikoRepository
     }
 
     override fun deleteMusic(music: Music, action: () -> Unit) {
-        databaseUtil.deleteAllMusic(action)
+        databaseUtil.deleteMusic(music, action)
     }
 
     override fun insertMusic(musicList: List<Music>, action: () -> Unit) {
@@ -33,7 +33,6 @@ class MosikoRepository(private val databaseUtil: DatabaseUtil): MosikoRepository
     override fun insertMusic(music: Music, action: () -> Unit) {
         databaseUtil.insertMusic(music, action)
     }
-
 
 
     override fun getAllPlaylist(action: (List<Playlist>) -> Unit) {

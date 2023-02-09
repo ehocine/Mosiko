@@ -94,4 +94,7 @@ dependencies {
 
     // Lottie
     implementation 'com.airbnb.android:lottie-compose:5.2.0'
+
+    //Swipe
+    implementation "me.saket.swipe:swipe:1.0.0"
 }

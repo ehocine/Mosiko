@@ -298,7 +298,6 @@ class MusicControllerViewModel @Inject constructor(
                                 setProgress(
                                     if (exoPlayer.duration != -1L) exoPlayer.currentPosition else 0L
                                 )
-
                                 mediaHandler.postDelayed(mediaRunnable, 1000)
                             }
 
@@ -431,6 +430,10 @@ class MusicControllerViewModel @Inject constructor(
         repository.updatePlaylist(playlist, action)
     }
 
+    fun deleteMusic(music: Music, action: () -> Unit) {
+        repository.deleteMusic(music, action)
+    }
+
     fun deletePlaylist(playlist: Playlist, action: () -> Unit = {}) {
         repository.deletePlaylist(playlist, action)
     }
@@ -444,6 +447,10 @@ class MusicControllerViewModel @Inject constructor(
             },
             action = action
         )
+    }
+
+    fun resetCurrentMusic() {
+        _currentMusicPlayed.value = Music.unknown
     }
 
     enum class MusicPlayMode {

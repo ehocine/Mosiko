@@ -1,6 +1,5 @@
 package com.hocel.mosiko.utils
 
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
@@ -14,8 +13,6 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.DpSize
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterialApi::class)
-@Suppress("ModifierInspectorInfo")
 internal fun Modifier.minimumTouchTargetSize(): Modifier = composed {
     if (LocalMinimumTouchTargetEnforcement.current) {
         val size = LocalViewConfiguration.current.minimumTouchTargetSize
@@ -25,8 +22,6 @@ internal fun Modifier.minimumTouchTargetSize(): Modifier = composed {
     }
 }
 
-@Suppress("EXPERIMENTAL_ANNOTATION_ON_WRONG_TARGET")
-@ExperimentalMaterialApi
 val LocalMinimumTouchTargetEnforcement: ProvidableCompositionLocal<Boolean> =
     staticCompositionLocalOf { true }
 

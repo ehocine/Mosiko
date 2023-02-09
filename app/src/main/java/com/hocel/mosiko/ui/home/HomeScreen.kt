@@ -2,6 +2,7 @@ package com.hocel.mosiko.ui.home
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -24,19 +26,20 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
+import com.hocel.mosiko.MainActivity
 import com.hocel.mosiko.R
 import com.hocel.mosiko.common.AppDatastore
+import com.hocel.mosiko.common.ScanMusicViewModel
 import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.model.MusicControllerState
-import com.hocel.mosiko.MainActivity
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.theme.*
 import com.hocel.mosiko.utils.AppUtils
 import com.hocel.mosiko.utils.ComposeUtils.LifecycleEventListener
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
-import com.hocel.mosiko.common.ScanMusicViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -141,7 +144,7 @@ fun HomeScreen(
     ModalBottomSheetLayout(
         sheetElevation = 8.dp,
         sheetShape = RoundedCornerShape(32.dp),
-        scrimColor = pure_black.copy(alpha = 0.6f),
+        scrimColor = black.copy(alpha = 0.6f),
         sheetBackgroundColor = if (isSystemInDarkTheme()) background_content_dark else white,
         sheetState = modalBottomSheetSortOptionState,
         sheetContent = {
@@ -225,85 +228,87 @@ fun HomeScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Search,
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = iconColor
                             )
                         }
                     }
                 }
             }
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                ScrollableTabRow(
-                    backgroundColor = if (isSystemInDarkTheme()) black else white,
-                    selectedTabIndex = pagerState.currentPage,
-                    edgePadding = 8.dp,
-                    divider = {},
-                    indicator = {
-                        // TODO: 05/01/2022 pagerState.currentPage move to last index when screen is on (onStart),
-                        //  (cause "Cannot round NaN value" if use indicator)
-//                        TabRowDefaults.Indicator(
-//                            height = 2.4f.dp,
-//                            color = sunset_orange,
-//                            modifier = Modifier
-//                                .pagerTabIndicatorOffset(pagerState, tabPositions)
-//                                .clip(RoundedCornerShape(8.dp))
-//                        )
-                    }
-                ) {
-                    pages.forEachIndexed { index, label ->
-                        Tab(
-                            selected = pagerState.currentPage == index,
-                            selectedContentColor = Color.Transparent,
-                            text = {
-                                Text(
-                                    text = label,
-                                    maxLines = 1,
-                                    style = typographyDmSans().body1.copy(
-                                        color = if (pagerState.currentPage == index) sunset_orange
-                                        else {
-                                            if (isSystemInDarkTheme()) white else black
-                                        },
-                                        fontSize = TextUnit(14f, TextUnitType.Sp),
-                                        fontWeight = FontWeight.ExtraBold
-                                    )
-                                )
-                            },
-                            onClick = {
-                                scope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            }
-                        )
-                    }
-                }
-                HorizontalPager(
-                    state = pagerState,
-                    count = pages.size,
+            Surface(Modifier.fillMaxSize(), color = if (isSystemInDarkTheme()) black else white) {
+                Column(
                     modifier = Modifier
-                        .padding(top = 16.dp)
-                ) { page ->
-                    when (page) {
-                        0 -> SongPagerScreen(
-                            homeViewModel = homeViewModel,
-                            musicControllerViewModel = musicControllerViewModel,
-                            scanMusicViewModel = scanMusicViewModel
-                        )
-                        1 -> AlbumPagerScreen(
-                            homeViewModel = homeViewModel,
-                            navController = navController,
-                        )
-                        2 -> ArtistPagerScreen(
-                            homeViewModel = homeViewModel,
-                            navController = navController,
-                        )
-                        3 -> PlaylistPagerScreen(
-                            homeViewModel = homeViewModel,
-                            navController = navController,
-                            musicControllerViewModel = musicControllerViewModel
-                        )
+                        .fillMaxSize()
+                        .background(if (isSystemInDarkTheme()) black else white)
+                ) {
+                    ScrollableTabRow(
+                        backgroundColor = if (isSystemInDarkTheme()) black else white,
+                        selectedTabIndex = pagerState.currentPage,
+                        edgePadding = 8.dp,
+                        divider = {},
+                        indicator = {
+                            TabRowDefaults.Indicator(
+                                height = 2.4f.dp,
+                                color = sunset_orange,
+                                modifier = Modifier
+                                    .pagerTabIndicatorOffset(pagerState, it)
+                                    .clip(RoundedCornerShape(8.dp))
+                            )
+                        }
+                    ) {
+                        pages.forEachIndexed { index, label ->
+                            Tab(
+                                selected = pagerState.currentPage == index,
+                                selectedContentColor = Color.Transparent,
+                                text = {
+                                    Text(
+                                        text = label,
+                                        maxLines = 1,
+                                        style = typographyDmSans().body1.copy(
+                                            color = if (pagerState.currentPage == index) sunset_orange
+                                            else {
+                                                if (isSystemInDarkTheme()) white else black
+                                            },
+                                            fontSize = TextUnit(14f, TextUnitType.Sp),
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    )
+                                },
+                                onClick = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    HorizontalPager(
+                        state = pagerState,
+                        count = pages.size,
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                    ) { page ->
+                        when (page) {
+                            0 -> SongPagerScreen(
+                                homeViewModel = homeViewModel,
+                                musicControllerViewModel = musicControllerViewModel,
+                                scanMusicViewModel = scanMusicViewModel
+                            )
+                            1 -> AlbumPagerScreen(
+                                homeViewModel = homeViewModel,
+                                navController = navController,
+                            )
+                            2 -> ArtistPagerScreen(
+                                homeViewModel = homeViewModel,
+                                navController = navController,
+                            )
+                            3 -> PlaylistPagerScreen(
+                                homeViewModel = homeViewModel,
+                                navController = navController,
+                                musicControllerViewModel = musicControllerViewModel
+                            )
+                        }
                     }
                 }
             }

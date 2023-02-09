@@ -18,7 +18,7 @@ class DatabaseUtil(context: Context) {
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
     private fun postAction(action: () -> Unit) = Handler(Looper.getMainLooper()).post { action() }
 
-    fun getAllMusic(action: (List<Music>) -> Unit) {
+    fun getAllMusic(action: (MutableList<Music>) -> Unit) {
         val musicList = ArrayList<Music>()
         scope.launch {
             musicList.addAll(musicDao.getAllMusic())

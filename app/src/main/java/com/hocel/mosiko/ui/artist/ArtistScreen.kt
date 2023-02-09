@@ -13,7 +13,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -24,7 +23,6 @@ import com.hocel.mosiko.ui.components.MusicItem
 import com.hocel.mosiko.ui.theme.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@OptIn(ExperimentalUnitApi::class)
 @Composable
 fun ArtistScreen(
     artistName: String,
@@ -47,6 +45,7 @@ fun ArtistScreen(
         topBar = {
             TopAppBar(
                 backgroundColor = if (isSystemInDarkTheme()) background_dark else background_light,
+                elevation = 0.dp,
                 title = {
                     Text(
                         text = artistName,
@@ -89,7 +88,8 @@ fun ArtistScreen(
                             musicControllerViewModel.play(music.audioID)
                             musicControllerViewModel.getPlaylist()
                         }
-                    }
+                    },
+                    deleteMusic = {}
                 )
             }
         }

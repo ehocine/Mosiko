@@ -6,10 +6,12 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
@@ -20,6 +22,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -32,7 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
 import coil.request.ImageRequest
 import com.hocel.mosiko.R
 import com.hocel.mosiko.data.MosikoDestination
@@ -40,6 +45,7 @@ import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.MusicItem
+import com.hocel.mosiko.ui.components.PlaylistDropMenu
 import com.hocel.mosiko.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -55,11 +61,11 @@ fun PlaylistScreen(
     playlistViewModel: PlaylistViewModel,
     musicControllerViewModel: MusicControllerViewModel
 ) {
-
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val scope = rememberCoroutineScope()
-    val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val modalBottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
     val playlist by playlistViewModel.playlist.observeAsState(initial = Playlist.unknown)
     val selectedMusic by playlistViewModel.selectedMusic.observeAsState(initial = Music.unknown)
@@ -67,7 +73,6 @@ fun PlaylistScreen(
     val sheetStateContent by playlistViewModel.sheetStateContent.observeAsState(
         initial = PlaylistViewModel.PlaylistScreenSheetStateContent.PlaylistMoreOptionSheetContent
     )
-
     var hasNavigate by remember { mutableStateOf(false) }
 
     if (!hasNavigate) {
@@ -91,7 +96,7 @@ fun PlaylistScreen(
     }
 
     ModalBottomSheetLayout(
-        scrimColor = pure_black.copy(alpha = 0.6f),
+        scrimColor = black.copy(alpha = 0.6f),
         sheetState = modalBottomSheetState,
         sheetElevation = 8.dp,
         sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
@@ -138,12 +143,7 @@ fun PlaylistScreen(
             modalBottomSheetState = modalBottomSheetState
         )
     }
-
 }
-
-
-
-
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(
@@ -152,6 +152,307 @@ fun PlaylistScreen(
 )
 @Composable
 private fun ScreenContent(
+    playlist: Playlist,
+    scope: CoroutineScope,
+    navController: NavHostController,
+    playlistViewModel: PlaylistViewModel,
+    musicControllerViewModel: MusicControllerViewModel,
+    modalBottomSheetState: ModalBottomSheetState
+) {
+
+    val context = LocalContext.current
+
+    val currentMusicPlayed by musicControllerViewModel.currentMusicPlayed.observeAsState(initial = Music.unknown)
+
+    var musicIndexForAlbumThumbnail by remember { mutableStateOf(0) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                backgroundColor = if (isSystemInDarkTheme()) background_dark else background_light,
+                title = {},
+                elevation = 0.dp,
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBack,
+                            tint = if (isSystemInDarkTheme()) white else black,
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 64.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(170.dp)
+                        .padding(top = 16.dp, start = 16.dp)
+                ) {
+                    SubcomposeAsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(
+                                data = try {
+                                    playlist.defaultImage
+                                        ?: if (playlist.musicList.isNotEmpty()) {
+                                            playlist.musicList[musicIndexForAlbumThumbnail].albumPath.toUri()
+                                        } else ContextCompat.getDrawable(
+                                            context,
+                                            R.drawable.ic_music_unknown
+                                        )!!
+                                } catch (e: IndexOutOfBoundsException) {
+                                    e.printStackTrace()
+                                    musicIndexForAlbumThumbnail = 0
+                                }
+                            )
+                            .placeholder(R.drawable.ic_music_unknown)
+                            .error(R.drawable.ic_music_unknown)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = null
+                    ) {
+                        SubcomposeAsyncImageContent(
+                            modifier = Modifier
+                                .size(160.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                    // Playlist name, button edit, button delete
+                    Column(
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 16.dp, end = 8.dp)
+                            .weight(1f)
+                    ) {
+                        // Playlist name
+                        Text(
+                            text = playlist.name,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = typographyDmSans().body1.copy(
+                                fontSize = TextUnit(18f, TextUnitType.Sp),
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        )
+                        playlist.musicList.size.let {
+                            Text(
+                                text = "$it " + if (it > 1) "songs" else "song",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style = typographySkModernist().body1.copy(
+                                    color = typographySkModernist().body1.color.copy(alpha = 0.7f),
+                                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                                ),
+                                modifier = Modifier
+                                    .padding(top = 6.dp)
+                            )
+                        }
+                    }
+                }
+
+                if (!playlist.isDefault) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+
+                        OutlinedButton(
+                            modifier = Modifier.weight(0.5f),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(0.dp),
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = if (isSystemInDarkTheme()) white else black
+                            ),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                backgroundColor = Color.Transparent
+                            ),
+                            onClick = {
+                                playlistViewModel.setSheetStateContent(
+                                    PlaylistViewModel.PlaylistScreenSheetStateContent.ChangePlaylistNameSheetContent
+                                )
+                                scope.launch {
+                                    modalBottomSheetState.show()
+                                }
+                            }
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Edit,
+                                    tint = if (isSystemInDarkTheme()) white else black,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .padding(top = 10.dp, bottom = 10.dp, end = 4.dp)
+                                        .size(20.dp)
+                                )
+
+                                Text(
+                                    text = stringResource(id = R.string.edit),
+                                    textAlign = TextAlign.Start,
+                                    style = typographySkModernist().body1.copy(
+                                        fontSize = TextUnit(14f, TextUnitType.Sp),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.padding(5.dp))
+                        Button(
+                            modifier = Modifier.weight(0.5f),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(0.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = if (isSystemInDarkTheme()) white else black
+                            ),
+                            onClick = {
+                                playlistViewModel.setSheetStateContent(
+                                    PlaylistViewModel.PlaylistScreenSheetStateContent.DeletePlaylistSheetContent
+                                )
+
+                                playlistViewModel.setDeleteType(
+                                    PlaylistViewModel.PlaylistScreenDeleteType.PLAYLIST
+                                )
+                                scope.launch {
+                                    modalBottomSheetState.show()
+                                }
+                            }
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Delete,
+                                    tint = if (isSystemInDarkTheme()) black else white,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .padding(top = 10.dp, bottom = 10.dp, end = 4.dp)
+                                        .size(20.dp)
+
+                                )
+
+                                Text(
+                                    text = stringResource(id = R.string.delete),
+                                    textAlign = TextAlign.Start,
+                                    style = typographySkModernist().body1.copy(
+                                        color = if (isSystemInDarkTheme()) black else white,
+                                        fontSize = TextUnit(14f, TextUnitType.Sp),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+
+                CompositionLocalProvider(
+                    LocalOverscrollConfiguration provides null
+                ) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    ) {
+                        items(playlist.musicList) { music ->
+                            MusicItem(
+                                music = music,
+                                isMusicPlayed = currentMusicPlayed.audioID == music.audioID,
+                                showTrailingIcon = !playlist.isDefault,  // show more options if not default playlist
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            scope.launch {
+                                                playlistViewModel.setSelectedMusic(music)
+                                                playlistViewModel.setSheetStateContent(
+                                                    PlaylistViewModel.PlaylistScreenSheetStateContent.PlaylistMoreOptionSheetContent
+                                                )
+                                                modalBottomSheetState.show()
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.MoreVert,
+                                            tint = if (isSystemInDarkTheme()) background_light else background_dark,
+                                            contentDescription = null
+                                        )
+                                    }
+                                },
+                                onClick = {
+                                    if (currentMusicPlayed.audioID != music.audioID) {
+                                        musicControllerViewModel.play(music.audioID)
+                                        musicControllerViewModel.getPlaylist()
+                                    }
+                                },
+                                deleteMusic = {
+
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            ExtendedFloatingActionButton(
+                backgroundColor = if (isSystemInDarkTheme()) white else black,
+                modifier = Modifier
+                    .padding(
+                        bottom = 32.dp,
+                        end = 32.dp
+                    )
+                    .align(Alignment.BottomEnd),
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.add_song),
+                        color = if (isSystemInDarkTheme()) black else white
+                    )
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        tint = if (isSystemInDarkTheme()) black else white,
+                        contentDescription = null
+                    )
+                },
+                onClick = {
+                    val route =
+                        MosikoDestination.SearchSong.createRoute(playlist.id)
+                    navController.navigate(route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+    }
+}
+
+/*
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(
+    ExperimentalMaterialApi::class,
+    ExperimentalFoundationApi::class
+)
+@Composable
+private fun TScreenContent(
     playlist: Playlist,
     scope: CoroutineScope,
     navController: NavHostController,
@@ -211,30 +512,6 @@ private fun ScreenContent(
                         ).apply(block = fun ImageRequest.Builder.() {
                             error(R.drawable.ic_music_unknown)
                             placeholder(R.drawable.ic_music_unknown)
-//                            listener(
-//                                onError = { _, _ ->
-//                                    if (musicIndexForAlbumThumbnail < playlist.musicList.size - 1) {
-//                                        musicIndexForAlbumThumbnail += 1
-//                                        data(
-//                                            run {
-//                                                if (playlist.musicList.isNotEmpty()) {
-//                                                    playlist.musicList[musicIndexForAlbumThumbnail].albumPath.toUri()
-//                                                } else ContextCompat.getDrawable(
-//                                                    context,
-//                                                    R.drawable.ic_music_unknown
-//                                                )!!
-//                                            }
-//                                        )
-//                                    } else data(
-//                                        ContextCompat.getDrawable(
-//                                            context,
-//                                            R.drawable.ic_music_unknown
-//                                        )!!
-//                                    ).also {
-//                                        musicIndexForAlbumThumbnail = 0
-//                                    }
-//                                },
-//                            )
                         }).build()
                     ),
                     contentDescription = null,
@@ -460,3 +737,5 @@ private fun ScreenContent(
         }
     }
 }
+
+*/

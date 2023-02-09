@@ -1,15 +1,14 @@
 package com.hocel.mosiko.ui.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
@@ -17,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -25,7 +25,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -34,9 +33,10 @@ import coil.request.ImageRequest
 import com.hocel.mosiko.R
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
-import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.theme.*
 import com.hocel.mosiko.utils.minimumTouchTargetSize
+import me.saket.swipe.SwipeAction
+import me.saket.swipe.SwipeableActionsBox
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -127,118 +127,139 @@ fun MusicItem(
     showDuration: Boolean = true,
     showTrailingIcon: Boolean = false,
     trailingIcon: @Composable ColumnScope.() -> Unit = {},
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enableDeleteAction: Boolean = false,
+    deleteMusic: (music: Music) -> Unit
 ) {
-    Card(
-        elevation = 0.dp,
-        backgroundColor = if (isSystemInDarkTheme()) background_dark else background_light,
-        shape = RoundedCornerShape(14.dp),
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(modifier)
+
+    val delete = SwipeAction(
+        onSwipe = {
+            deleteMusic(music)
+        },
+        icon = {
+            Icon(
+                modifier = Modifier.padding(16.dp),
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete icon",
+                tint = white
+            )
+        },
+        background = sunset_orange
+    )
+    SwipeableActionsBox(
+        swipeThreshold = 90.dp,
+        endActions = if (enableDeleteAction) listOf(delete) else listOf()
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Card(
+            elevation = 0.dp,
+            backgroundColor = if (isSystemInDarkTheme()) background_dark else background_light,
+            shape = RectangleShape,
+            onClick = onClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, top = 12.dp, bottom = 12.dp, end = 8.dp)
-                .background(if (isSystemInDarkTheme()) background_dark else background_light)
+                .then(modifier)
         ) {
-
-            if (showImage) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest.Builder(LocalContext.current)
-                            .data(data = music.albumPath.toUri())
-                            .apply(block = fun ImageRequest.Builder.() {
-                                error(R.drawable.ic_music_unknown)
-                                placeholder(R.drawable.ic_music_unknown)
-                            }).build()
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .weight(0.18f, fill = false)
-                )
-            }
-
-            Column(
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(start = 8.dp, end = 12.dp)
-                    .weight(0.6f)
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, top = 12.dp, bottom = 12.dp, end = 8.dp)
+                    .background(if (isSystemInDarkTheme()) background_dark else background_light)
             ) {
-                Text(
-                    text = music.title,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = typographyDmSans().body1.copy(
-                        color = if (isMusicPlayed) sunset_orange else typographyDmSans().body1.color,
-                        fontSize = TextUnit(14f, TextUnitType.Sp),
-                        fontWeight = FontWeight.SemiBold
-                    )
-                )
-
-                Text(
-                    text = "${music.artist} • ${music.album}",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = typographySkModernist().body1.copy(
-                        color = if (isMusicPlayed) sunset_orange else typographySkModernist().body1.color.copy(
-                            alpha = 0.7f
+                if (showImage) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(LocalContext.current)
+                                .data(data = music.albumPath.toUri())
+                                .apply(block = fun ImageRequest.Builder.() {
+                                    error(R.drawable.ic_music_unknown)
+                                    placeholder(R.drawable.ic_music_unknown)
+                                }).build()
                         ),
-                        fontSize = TextUnit(12f, TextUnitType.Sp),
-                    ),
-                    modifier = Modifier
-                        .padding(top = if (showDuration) 4.dp else 6.dp)
-                )
-
-                if (showDuration) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                        contentDescription = null,
                         modifier = Modifier
-                            .padding(top = 4.dp)
-                            .wrapContentSize(Alignment.BottomStart)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_clock),
-                            tint = if (isMusicPlayed) sunset_orange else {
-                                if (isSystemInDarkTheme()) white.copy(alpha = 0.7f) else black.copy(
-                                    alpha = 0.7f
-                                )
-                            },
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(13.dp)
-                        )
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .weight(0.18f, fill = false)
+                    )
+                }
 
-                        Text(
-                            text = SimpleDateFormat(
-                                "mm:ss",
-                                Locale.getDefault()
-                            ).format(music.duration),
-                            style = typographySkModernist().body1.copy(
-                                color = if (isMusicPlayed) sunset_orange else typographySkModernist().body1.color.copy(
-                                    alpha = 0.7f
-                                ),
-                                fontSize = TextUnit(12f, TextUnitType.Sp)
-                            ),
-                            modifier = Modifier
-                                .padding(start = 4.dp)
+                Column(
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 12.dp)
+                        .weight(0.6f)
+                ) {
+                    Text(
+                        text = music.title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = typographyDmSans().body1.copy(
+                            color = if (isMusicPlayed) sunset_orange else typographyDmSans().body1.color,
+                            fontSize = TextUnit(14f, TextUnitType.Sp),
+                            fontWeight = FontWeight.SemiBold
                         )
+                    )
+
+                    Text(
+                        text = "${music.artist} • ${music.album}",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = typographySkModernist().body1.copy(
+                            color = if (isMusicPlayed) sunset_orange else typographySkModernist().body1.color.copy(
+                                alpha = 0.7f
+                            ),
+                            fontSize = TextUnit(12f, TextUnitType.Sp),
+                        ),
+                        modifier = Modifier
+                            .padding(top = if (showDuration) 4.dp else 6.dp)
+                    )
+
+                    if (showDuration) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(top = 4.dp)
+                                .wrapContentSize(Alignment.BottomStart)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_clock),
+                                tint = if (isMusicPlayed) sunset_orange else {
+                                    if (isSystemInDarkTheme()) white.copy(alpha = 0.7f) else black.copy(
+                                        alpha = 0.7f
+                                    )
+                                },
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(13.dp)
+                            )
+
+                            Text(
+                                text = SimpleDateFormat(
+                                    "mm:ss",
+                                    Locale.getDefault()
+                                ).format(music.duration),
+                                style = typographySkModernist().body1.copy(
+                                    color = if (isMusicPlayed) sunset_orange else typographySkModernist().body1.color.copy(
+                                        alpha = 0.7f
+                                    ),
+                                    fontSize = TextUnit(12f, TextUnitType.Sp)
+                                ),
+                                modifier = Modifier
+                                    .padding(start = 4.dp)
+                            )
+                        }
                     }
                 }
-            }
-            if (showTrailingIcon) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    content = trailingIcon,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .weight(0.08f, fill = false)
-                )
+                if (showTrailingIcon) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        content = trailingIcon,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .weight(0.08f, fill = false)
+                    )
+                }
             }
         }
     }
@@ -285,28 +306,6 @@ fun AlbumItem(
                     }).apply(block = fun ImageRequest.Builder.() {
                         error(R.drawable.ic_music_unknown)
                         placeholder(R.drawable.ic_music_unknown)
-//                        listener(
-//                            onError = { _, _ ->
-//                                if (musicIndexForAlbumThumbnail < musicList.size - 1) {
-//                                    musicIndexForAlbumThumbnail += 1
-//                                    data(
-//                                        run {
-//                                            if (musicList.isNotEmpty()) {
-//                                                musicList[musicIndexForAlbumThumbnail].albumPath.toUri()
-//                                            } else ContextCompat.getDrawable(
-//                                                context,
-//                                                R.drawable.ic_music_unknown
-//                                            )!!
-//                                        }
-//                                    )
-//                                } else data(
-//                                    ContextCompat.getDrawable(
-//                                        context,
-//                                        R.drawable.ic_music_unknown
-//                                    )!!
-//                                )
-//                            }
-//                        )
                     }).build()
                 ),
                 contentDescription = null,
@@ -382,28 +381,6 @@ fun PlaylistItem(
                     ).apply(block = fun ImageRequest.Builder.() {
                         error(R.drawable.ic_music_unknown)
                         placeholder(R.drawable.ic_music_unknown)
-//                        listener(
-//                            onError = { _, _ ->
-//                                if (musicIndexForAlbumThumbnail < playlist.musicList.size - 1) {
-//                                    musicIndexForAlbumThumbnail += 1
-//                                    data(
-//                                        run {
-//                                            if (playlist.musicList.isNotEmpty()) {
-//                                                playlist.musicList[musicIndexForAlbumThumbnail].albumPath.toUri()
-//                                            } else ContextCompat.getDrawable(
-//                                                context,
-//                                                R.drawable.ic_music_unknown
-//                                            )!!
-//                                        }
-//                                    )
-//                                } else data(
-//                                    ContextCompat.getDrawable(
-//                                        context,
-//                                        R.drawable.ic_music_unknown
-//                                    )!!
-//                                )
-//                            }
-//                        )
                     }).build()
                 ),
                 contentDescription = null,
@@ -464,7 +441,7 @@ fun SetTimerSlider(
 ) {
 
     val tickItems = listOf(
-        "Nonaktif",
+        "Non-active",
         "30 mnt",
         "60 mnt",
         "90 mnt"
@@ -505,34 +482,59 @@ fun SetTimerSlider(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun MusicItemPreview() {
-    val m = Music(
-        audioID = -1L,
-        displayName = "-",
-        title = "Sing",
-        artist = "Youcef",
-        album = "-",
-        albumID = "-",
-        duration = 1L,
-        albumPath = "",
-        path = "-",
-        dateAdded = 0L,
-        isFavorite = true
-    )
-    MusicItem(
-        music = m,
-        isMusicPlayed = false,
-        modifier = Modifier,
-        showImage = true,
-        showDuration = true,
-        showTrailingIcon = false,
-        trailingIcon = {
+fun PlaylistDropMenu(
+    onEditClicked: () -> Unit,
+    onDeleteClicked: () -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
 
-        },
-        onClick = {
-
+    androidx.compose.material.IconButton(onClick = { expanded = true }) {
+        Icon(
+            imageVector = Icons.Default.MoreVert,
+            contentDescription = null,
+            tint = white
+        )
+        DropdownMenu(
+            modifier = Modifier.background(backgroundColor),
+            expanded = expanded,
+            onDismissRequest = { expanded = false }) {
+            DropdownMenuItem(onClick = {
+                expanded = false
+                onEditClicked()
+            }) {
+                Row(Modifier.fillMaxWidth()) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit Button",
+                        tint = if (isSystemInDarkTheme()) white else black,
+                    )
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    Text(
+                        text = stringResource(id = R.string.edit),
+                        modifier = Modifier.padding(start = 5.dp),
+                        color = if (isSystemInDarkTheme()) white else black,
+                    )
+                }
+            }
+            DropdownMenuItem(onClick = {
+                expanded = false
+                onDeleteClicked()
+            }) {
+                Row(Modifier.fillMaxWidth()) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete button",
+                        tint = if (isSystemInDarkTheme()) white else black
+                    )
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    Text(
+                        text = stringResource(id = R.string.delete),
+                        modifier = Modifier.padding(start = 5.dp),
+                        color = if (isSystemInDarkTheme()) white else black
+                    )
+                }
+            }
         }
-    )
+    }
 }

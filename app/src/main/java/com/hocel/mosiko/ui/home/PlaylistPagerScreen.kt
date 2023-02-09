@@ -13,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -25,13 +26,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -48,7 +47,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalMaterialApi::class,
-    ExperimentalComposeUiApi::class, ExperimentalUnitApi::class,
+    ExperimentalComposeUiApi::class,
 )
 @Composable
 fun PlaylistPagerScreen(
@@ -104,7 +103,7 @@ fun PlaylistPagerScreen(
         sheetState = newPlaylistModalBottomSheetState,
         sheetElevation = 8.dp,
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        scrimColor = pure_black.copy(alpha = 0.6f),
+        scrimColor = black.copy(alpha = 0.6f),
         sheetBackgroundColor = if (isSystemInDarkTheme()) background_content_dark else white,
         sheetContent = {
             Column(
@@ -120,7 +119,6 @@ fun PlaylistPagerScreen(
                         .background(white.copy(alpha = 0.2f))
                         .align(Alignment.CenterHorizontally)
                 )
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -135,11 +133,11 @@ fun PlaylistPagerScreen(
                         }
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_x_mark),
+                            imageVector = Icons.Rounded.Close,
                             tint = if (isSystemInDarkTheme()) white else black,
                             contentDescription = null,
                             modifier = Modifier
-                                .size(14.dp)
+                                .size(24.dp)
                         )
                     }
                     Text(
@@ -199,20 +197,15 @@ fun PlaylistPagerScreen(
                     ),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
-                        focusedIndicatorColor = sunset_orange,
-                        cursorColor = sunset_orange
+                        focusedIndicatorColor = cursorIndicator,
+                        cursorColor = cursorIndicator
                     ),
                     onValueChange = { s ->
                         if (playlistName.length < 25) playlistName = s
                     },
                     label = {
                         Text(
-                            text = stringResource(id = R.string.enter_playlist_name),
-                            style = typographyDmSans().body1.copy(
-                                color = sunset_orange
-                            ),
-                            modifier = Modifier
-                                .padding(bottom = 8.dp)
+                            text = stringResource(id = R.string.enter_playlist_name)
                         )
                     },
                     modifier = Modifier
@@ -226,6 +219,7 @@ fun PlaylistPagerScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(bottom = 64.dp)
         ) {
             LazyColumn(
                 modifier = Modifier
@@ -245,8 +239,8 @@ fun PlaylistPagerScreen(
                     )
                 }
             }
-            FloatingActionButton(
-                backgroundColor = if (isSystemInDarkTheme()) background_content_dark else background_content_light,
+            ExtendedFloatingActionButton(
+                backgroundColor = if (isSystemInDarkTheme()) white else black,
                 onClick = {
                     scope.launch {
                         newPlaylistModalBottomSheetState.show()
@@ -254,17 +248,24 @@ fun PlaylistPagerScreen(
                 },
                 modifier = Modifier
                     .padding(
-                        bottom = 96.dp,  // 32 + 64 (padding mini music player)
+                        bottom = 32.dp,
                         end = 32.dp
                     )
-                    .align(Alignment.BottomEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Add,
-                    tint = if (isSystemInDarkTheme()) white else black,
-                    contentDescription = null
-                )
-            }
+                    .align(Alignment.BottomEnd),
+                text = {
+                    Text(
+                        text = stringResource(R.string.create_new_playlist),
+                        color = if (isSystemInDarkTheme()) black else white
+                    )
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        tint = if (isSystemInDarkTheme()) black else white,
+                        contentDescription = null
+                    )
+                }
+            )
         }
     }
 }

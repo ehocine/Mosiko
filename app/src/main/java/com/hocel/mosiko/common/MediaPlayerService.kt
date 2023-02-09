@@ -4,25 +4,17 @@ import android.Manifest
 import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.media.AudioManager
 import android.media.MediaMetadata
-import android.net.Uri
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
-import android.provider.MediaStore
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import android.view.KeyEvent
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media.app.NotificationCompat
-import com.hocel.mosiko.R
 import com.hocel.mosiko.model.MediaPlayerState
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.utils.AlarmUtil
@@ -46,7 +38,6 @@ class MediaPlayerService : Service() {
         audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         notificationManager = NotificationManagerCompat.from(this)
 
-//        mediaSession = MediaSession(this, "MediaPlayerSessionService")
         mediaSession = MediaSessionCompat(this, "MediaPlayerSessionService")
         mediaStyle = NotificationCompat.MediaStyle().setMediaSession(mediaSession.sessionToken)
 
@@ -123,13 +114,6 @@ class MediaPlayerService : Service() {
                         Manifest.permission.POST_NOTIFICATIONS
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
                     return 0
                 }
                 notificationManager.notify(
@@ -156,7 +140,6 @@ class MediaPlayerService : Service() {
         stopForeground(STOP_FOREGROUND_DETACH).also {
             isForegroundService = false
         }
-
         super.onTaskRemoved(rootIntent)
     }
 

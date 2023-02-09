@@ -21,10 +21,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.hocel.mosiko.R
 import com.hocel.mosiko.model.MusicControllerState
 import com.hocel.mosiko.ui.components.SetTimerSlider
 import com.hocel.mosiko.ui.theme.*
@@ -33,10 +33,8 @@ import com.hocel.mosiko.utils.AppUtils.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.hocel.mosiko.R
 
 @OptIn(
-    ExperimentalUnitApi::class,
     ExperimentalMaterialApi::class
 )
 @Composable
@@ -78,8 +76,7 @@ fun MusicScreenSetTimerSheetContent(
             ) {
                 append(minute.toString())
             }
-
-            append(" mnt")
+            append(" minute(s)")
         }
     }
 
@@ -132,7 +129,7 @@ fun MusicScreenSetTimerSheetContent(
                             durationInMs = minute * 60 * 1000
                         )
 
-                        "${context.getString(R.string.timer_is_set_to)} $minute mnt".toast(context)
+                        "${context.getString(R.string.timer_is_set_to)} $minute minute(s)".toast(context)
                     }
 
                     scope.launch {

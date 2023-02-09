@@ -129,13 +129,6 @@ class MainActivity : ComponentActivity(), ServiceConnection {
 
             setContent {
                 MusyTheme {
-                    //Scanning Music on start
-                    LaunchedEffect(key1 = true) {
-                        scanMusicViewModel.scanLocalSong(this@MainActivity)
-                        {
-                            homeViewModel.refreshSongsList.value = true
-                        }
-                    }
                     Surface(color = MaterialTheme.colors.background) {
                         MusyApp(
                             datastore = datastore,

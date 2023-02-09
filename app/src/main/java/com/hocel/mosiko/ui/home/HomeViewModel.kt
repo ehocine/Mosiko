@@ -8,6 +8,8 @@ import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.utils.AppUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.text.Collator
 import java.util.*
@@ -15,12 +17,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val application: MosikoApplication,
+    application: MosikoApplication,
     private val repository: MosikoRepositoryImpl
 ) : ViewModel() {
 
-    private val _musicList = MutableLiveData(emptyList<Music>())
-    val musicList: LiveData<List<Music>> = _musicList
+    //    MutableLiveData(emptyList<Music>())
+    private val _musicList: MutableStateFlow<MutableList<Music>> = MutableStateFlow(mutableListOf())
+    val musicList: StateFlow<MutableList<Music>> = _musicList
 
     private val _albumList = MutableLiveData(emptyMap<String, List<Music>>())
     val albumList: LiveData<Map<String, List<Music>>> = _albumList
@@ -66,7 +69,6 @@ class HomeViewModel @Inject constructor(
                     return@Comparator collator.compare(o1.title, o2.title)
                 })
             }
-
             _musicList.value = list
         }
     }
@@ -105,6 +107,12 @@ class HomeViewModel @Inject constructor(
                     add(i, playlist)
                 }
             }
+        }
+    }
+
+    fun deleteMusicFromList(music: Music) {
+        _musicList.value!!.apply {
+            remove(music)
         }
     }
 }

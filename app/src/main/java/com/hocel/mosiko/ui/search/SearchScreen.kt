@@ -2,7 +2,6 @@ package com.hocel.mosiko.ui.search
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -14,7 +13,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -24,11 +22,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -39,12 +35,10 @@ import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.AlbumItem
 import com.hocel.mosiko.ui.components.MusicItem
-import com.hocel.mosiko.ui.components.TransparentButton
 import com.hocel.mosiko.ui.theme.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(
-    ExperimentalUnitApi::class,
     ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class
 )
@@ -101,26 +95,31 @@ fun SearchScreen(
                                 query = s
                             },
                             trailingIcon = {
-                                if (query.isNotBlank()) {
-                                    IconButton(
-                                        onClick = {
-                                            query = ""
+                                IconButton(
+                                    onClick = {
+                                        when (query.isNotEmpty()) {
+                                            true -> {
+                                                query = ""
+                                            }
+                                            else -> {
+                                                navController.popBackStack()
+                                            }
                                         }
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Close,
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .size(16.dp)
-                                        )
                                     }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(16.dp)
+                                    )
                                 }
                             },
                             placeholder = {
                                 Text(
                                     text = stringResource(id = R.string.search_placeholder),
                                     style = typographySkModernist().body1.copy(
-                                        color = background_content_dark
+                                        color = textColor
                                     )
                                 )
                             },
@@ -142,31 +141,6 @@ fun SearchScreen(
                                 .padding(end = 8.dp)
                                 .focusRequester(searchTextFieldFocusRequester)
                         )
-
-                        Divider(
-                            color = background_content_dark,
-                            modifier = Modifier
-                                .weight(0.01f, fill = false)
-                                .size(1.dp, 16.dp)
-                        )
-
-                        TransparentButton(
-                            indication = rememberRipple(color = Color.Transparent),
-                            onClick = {
-                                navController.popBackStack()
-                            },
-                            modifier = Modifier
-                                .weight(0.18f)
-                                .padding(start = 8.dp)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.cancel),
-                                style = typographySkModernist().body1.copy(
-                                    fontSize = TextUnit(12f, TextUnitType.Sp),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                        }
                     }
 
                     Divider(
@@ -186,7 +160,6 @@ fun SearchScreen(
                 modifier = Modifier
                     .padding(bottom = 64.dp)
             ) {
-
                 item {
                     if (filteredMusic.isNotEmpty()) {
                         Box(
@@ -230,6 +203,7 @@ fun SearchScreen(
                                 musicControllerViewModel.play(music.audioID)
                             }
                         },
+                        deleteMusic = {},
                         modifier = Modifier
                             .padding(vertical = 4.dp)
                     )

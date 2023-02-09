@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -32,7 +31,6 @@ import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.MusicItem
 import com.hocel.mosiko.ui.theme.*
 
-@OptIn(ExperimentalUnitApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AlbumScreen(
@@ -59,11 +57,12 @@ fun AlbumScreen(
             TopAppBar(
                 backgroundColor = if (isSystemInDarkTheme()) background_dark else background_light,
                 title = {},
+                elevation = 0.dp,
                 navigationIcon = {
                     IconButton(
                         onClick = {
                             navController.popBackStack()
-                        },
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBack,
@@ -146,7 +145,8 @@ fun AlbumScreen(
                             musicControllerViewModel.play(music.audioID)
                             musicControllerViewModel.getPlaylist()
                         }
-                    }
+                    },
+                    deleteMusic = {}
                 )
             }
         }

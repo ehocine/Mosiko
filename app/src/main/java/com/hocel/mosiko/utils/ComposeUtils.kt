@@ -75,5 +75,4 @@ object ComposeUtils {
             blue = color.blue + (1 - color.blue) * factor
         )
     }
-
 }

@@ -46,9 +46,6 @@ class AppDatastore(context: Context): ContextWrapper(context) {
     }
 
 
-
-
-
     val getSortMusicOption: Flow<String> = datastore.data.map { preferences ->
         preferences[sortMusicOption] ?: AppUtils.PreferencesValue.SORT_MUSIC_BY_NAME
     }

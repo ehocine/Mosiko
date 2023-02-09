@@ -5,6 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,8 +20,7 @@ import com.hocel.mosiko.ui.theme.typographySkModernist
 
 @Composable
 fun ScanMusicProgressIndicator(
-    scannedMusicInPercent: Int,
-    progressAngle: Float
+    scannedMusicInPercent: Int
 ) {
     Box(
         modifier = Modifier
@@ -35,7 +35,7 @@ fun ScanMusicProgressIndicator(
         ) {
             LottieAnim(modifier = Modifier.size(150.dp), lottie = R.raw.data_scanning)
             Text(
-                text = "Loading music",
+                text = stringResource(R.string.loading_local_music),
                 textAlign = TextAlign.Center,
                 style = typographySkModernist().body1.copy(
                     fontSize = TextUnit(20f, TextUnitType.Sp),
@@ -53,17 +53,5 @@ fun ScanMusicProgressIndicator(
                 color = scanMusicColor
             )
         }
-//        ScanMusicProgress(
-//            angle = progressAngle
-//        )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProgressIndicatorPreview() {
-    ScanMusicProgressIndicator(
-        scannedMusicInPercent = 90,
-        progressAngle = 90f
-    )
 }

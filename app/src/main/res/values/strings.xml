@@ -1,14 +1,14 @@
 <resources>
 
     <string name="app_name" translatable="false">Mosiko</string>
-    
+
     <string name="scan_local_songs">Scan local songs</string>
     <string name="sort_by">Sort by</string>
     <string name="date_added">Date added</string>
     <string name="song_name">Song name</string>
     <string name="artist_name">Artist name</string>
     <string name="cancel">Cancel</string>
-    <string name="search_placeholder">Song, artist, or album</string>
+    <string name="search_placeholder">Search song, artist or album</string>
     <string name="song">Song</string>
     <string name="artist">Artist</string>
     <string name="album">Album</string>
@@ -22,7 +22,7 @@
     <string name="new_playlist">New playlist</string>
     <string name="rename_playlist">Rename playlist</string>
     <string name="my_playlist">My playlist</string>
-    <string name="enter_playlist_name">Enter playlist name</string>
+    <string name="enter_playlist_name">Enter a playlist name</string>
     <string name="playlist_name_cannot_be_empty">Playlist name cannot be empty</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
@@ -34,8 +34,10 @@
     <string name="added">Added</string>
     <string name="successfully_added">Successfully added</string>
     <string name="non_active">Non-active</string>
-    <string name="set_time_to">Set time to</string>
-    <string name="timer_disabled">Timer disabled</string>
+    <string name="set_time_to">Set timer to</string>
+    <string name="timer_disabled">Timer is disabled</string>
     <string name="timer_is_set_to">Timer is set to</string>
+    <string name="create_new_playlist">Create new</string>
+    <string name="loading_local_music">Loading local music</string>
 
 </resources>

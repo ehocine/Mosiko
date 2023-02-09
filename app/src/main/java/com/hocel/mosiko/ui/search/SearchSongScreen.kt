@@ -2,7 +2,6 @@ package com.hocel.mosiko.ui.search
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -12,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.ripple.rememberRipple
@@ -24,7 +24,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -102,20 +101,26 @@ fun SearchSongScreen(
                                 query = s
                             },
                             trailingIcon = {
-                                if (query.isNotBlank()) {
-                                    IconButton(
-                                        onClick = {
-                                            query = ""
+                                IconButton(
+                                    onClick = {
+                                        when (query.isNotEmpty()) {
+                                            true -> {
+                                                query = ""
+                                            }
+                                            else -> {
+                                                navController.popBackStack()
+                                            }
                                         }
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.x_mark_outlined_filled),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .size(16.dp)
-                                        )
                                     }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(16.dp)
+                                    )
                                 }
+
                             },
                             placeholder = {
                                 Text(
@@ -143,33 +148,7 @@ fun SearchSongScreen(
                                 .padding(end = 8.dp)
                                 .focusRequester(searchTextFieldFocusRequester)
                         )
-
-                        Divider(
-                            color = background_content_dark,
-                            modifier = Modifier
-                                .weight(0.01f, fill = false)
-                                .size(1.dp, 16.dp)
-                        )
-
-                        TransparentButton(
-                            indication = rememberRipple(color = Color.Transparent),
-                            onClick = {
-                                navController.popBackStack()
-                            },
-                            modifier = Modifier
-                                .weight(0.18f)
-                                .padding(start = 8.dp)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.cancel),
-                                style = typographySkModernist().body1.copy(
-                                    fontSize = TextUnit(12f, TextUnitType.Sp),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                        }
                     }
-
                     Divider(
                         color = background_content_dark,
                         thickness = 1.dp,
@@ -230,10 +209,14 @@ fun SearchSongScreen(
                         trailingIcon = {
                             IconButton(
                                 onClick = {
-                                    if (musicListInPlaylist.contains(music)) musicListInPlaylist.remove(music)
+                                    if (musicListInPlaylist.contains(music)) musicListInPlaylist.remove(
+                                        music
+                                    )
                                     else musicListInPlaylist.add(music)
 
-                                    searchViewModel.updatePlaylist(playlist.apply { musicList = musicListInPlaylist })
+                                    searchViewModel.updatePlaylist(playlist.apply {
+                                        musicList = musicListInPlaylist
+                                    })
                                 }
                             ) {
                                 Icon(
@@ -244,16 +227,20 @@ fun SearchSongScreen(
                             }
                         },
                         onClick = {
-                            if (musicListInPlaylist.contains(music)) musicListInPlaylist.remove(music)
+                            if (musicListInPlaylist.contains(music)) musicListInPlaylist.remove(
+                                music
+                            )
                             else musicListInPlaylist.add(music)
 
-                            searchViewModel.updatePlaylist(playlist.apply { musicList = musicListInPlaylist })
+                            searchViewModel.updatePlaylist(playlist.apply {
+                                musicList = musicListInPlaylist
+                            })
                         },
+                        deleteMusic = {},
                         modifier = Modifier
                             .padding(vertical = 4.dp)
                     )
                 }
-
             }
         }
     }

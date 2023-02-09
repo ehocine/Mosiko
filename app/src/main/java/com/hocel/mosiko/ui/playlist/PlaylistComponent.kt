@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -49,7 +49,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalUnitApi::class
+    ExperimentalMaterialApi::class
 )
 @Composable
 fun DeletePlaylistSheetContent(
@@ -60,7 +60,7 @@ fun DeletePlaylistSheetContent(
     modalBottomSheetState: ModalBottomSheetState,
     musicControllerViewModel: MusicControllerViewModel,
     deleteType: PlaylistViewModel.PlaylistScreenDeleteType
-)  {
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,7 +136,6 @@ fun DeletePlaylistSheetContent(
 }
 
 @OptIn(
-    ExperimentalUnitApi::class,
     ExperimentalMaterialApi::class
 )
 @Composable
@@ -220,10 +219,15 @@ fun PlaylistMoreOptionSheetContent(
                 ) {
                     Icon(
                         painter = painterResource(id = pair.second),
-                        tint = if (isSystemInDarkTheme()) white else background_dark,
+                        tint = when (pair.first) {
+                            moreOptionItems[2].first -> sunset_orange
+                            else -> {
+                                if (isSystemInDarkTheme()) white else background_dark
+                            }
+                        },
                         contentDescription = null,
                         modifier = Modifier
-                            .size(16.dp)
+                            .size(22.dp)
                     )
 
                     Text(
@@ -233,9 +237,13 @@ fun PlaylistMoreOptionSheetContent(
                             moreOptionItems[1].first -> music.album
                             else -> pair.first
                         },
-                        style = typographySkModernist().body1.copy(
-                            fontSize = TextUnit(14f, TextUnitType.Sp),
-                        ),
+                        style = typographySkModernist().body1,
+                        color = when (pair.first) {
+                            moreOptionItems[2].first -> sunset_orange
+                            else -> {
+                                if (isSystemInDarkTheme()) white else background_dark
+                            }
+                        },
                         modifier = Modifier
                             .padding(start = 16.dp)
                     )
@@ -243,15 +251,9 @@ fun PlaylistMoreOptionSheetContent(
             }
         }
     }
-
 }
 
-
-
-
-
 @OptIn(
-    ExperimentalUnitApi::class,
     ExperimentalMaterialApi::class,
     ExperimentalComposeUiApi::class,
 )
@@ -298,14 +300,13 @@ fun ChangePlaylistNameSheetContent(
                 }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_x_mark),
+                    imageVector = Icons.Rounded.Close,
                     tint = if (isSystemInDarkTheme()) white else black,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(14.dp)
+                        .size(24.dp)
                 )
             }
-
             Text(
                 text = stringResource(id = R.string.rename_playlist),
                 maxLines = 1,
@@ -319,7 +320,6 @@ fun ChangePlaylistNameSheetContent(
                     .padding(horizontal = 16.dp)
                     .weight(1f)
             )
-
             IconButton(
                 onClick = {
                     if (playlistName.isNotBlank()) {
@@ -363,20 +363,15 @@ fun ChangePlaylistNameSheetContent(
             ),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
-                focusedIndicatorColor = sunset_orange,
-                cursorColor = sunset_orange
+                focusedIndicatorColor = cursorIndicator,
+                cursorColor = cursorIndicator
             ),
             onValueChange = { s ->
                 if (playlistName.length < 25) playlistName = s
             },
             label = {
                 Text(
-                    text = stringResource(id = R.string.enter_playlist_name),
-                    style = typographyDmSans().body1.copy(
-                        color = sunset_orange
-                    ),
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
+                    text = stringResource(id = R.string.enter_playlist_name)
                 )
             },
             modifier = Modifier

@@ -133,7 +133,7 @@ fun MusyApp(
                 sheetState = musicControllerState.musicMoreOptionModalBottomSheetState,
                 sheetElevation = 8.dp,
                 sheetShape = RoundedCornerShape(32.dp),
-                scrimColor = pure_black.copy(alpha = 0.6f),
+                scrimColor = black.copy(alpha = 0.6f),
                 sheetBackgroundColor = if (isSystemInDarkTheme()) background_content_dark else background_content_light,
                 sheetContent = {
 
@@ -172,7 +172,7 @@ fun MusyApp(
                     sheetState = musicControllerState.addToPlaylistModalBottomSheetState,
                     sheetElevation = 8.dp,
                     sheetShape = RoundedCornerShape(32.dp),
-                    scrimColor = pure_black.copy(alpha = 0.6f),
+                    scrimColor = black.copy(alpha = 0.6f),
                     sheetBackgroundColor = if (isSystemInDarkTheme()) background_content_dark else background_content_light,
                     sheetContent = {
 
@@ -211,7 +211,7 @@ fun MusyApp(
                         sheetState = musicControllerState.setTimerModalBottomSheetState,
                         sheetElevation = 8.dp,
                         sheetShape = RoundedCornerShape(32.dp),
-                        scrimColor = pure_black.copy(alpha = 0.6f),
+                        scrimColor = black.copy(alpha = 0.6f),
                         sheetBackgroundColor = if (isSystemInDarkTheme()) background_content_dark else background_content_light,
                         sheetContent = {
 

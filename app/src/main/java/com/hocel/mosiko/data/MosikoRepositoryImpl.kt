@@ -5,7 +5,7 @@ import com.hocel.mosiko.model.Playlist
 
 interface MosikoRepositoryImpl {
 
-    fun getAllMusic(action: (List<Music>) -> Unit)
+    fun getAllMusic(action: (MutableList<Music>) -> Unit)
 
     fun getMusic(audioID: Long, action: (Music) -> Unit)
 
@@ -18,8 +18,6 @@ interface MosikoRepositoryImpl {
     fun insertMusic(musicList: List<Music>, action: () -> Unit)
 
     fun insertMusic(music: Music, action: () -> Unit)
-
-
 
     fun getAllPlaylist(action: (List<Playlist>) -> Unit)
 

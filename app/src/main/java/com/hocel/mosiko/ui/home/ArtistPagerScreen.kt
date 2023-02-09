@@ -1,5 +1,6 @@
 package com.hocel.mosiko.ui.home
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,9 +23,7 @@ import androidx.navigation.NavHostController
 import com.hocel.mosiko.R
 import com.hocel.mosiko.data.MosikoDestination
 import com.hocel.mosiko.ui.components.musicompose.LottieAnim
-import com.hocel.mosiko.ui.theme.background_content_dark
-import com.hocel.mosiko.ui.theme.typographyDmSans
-import com.hocel.mosiko.ui.theme.typographySkModernist
+import com.hocel.mosiko.ui.theme.*
 
 @Composable
 fun ArtistPagerScreen(
@@ -94,7 +93,7 @@ fun ArtistPagerScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.KeyboardArrowRight,
-                        tint = background_content_dark,
+                        tint = if (isSystemInDarkTheme()) white else black,
                         contentDescription = null
                     )
                 }
