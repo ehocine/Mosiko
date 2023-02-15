@@ -10,6 +10,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.QueueMusic
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -17,14 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.hocel.mosiko.R
 import com.hocel.mosiko.model.Music
 import com.hocel.mosiko.model.MusicControllerState
 import com.hocel.mosiko.model.Playlist
@@ -38,10 +39,9 @@ import com.hocel.mosiko.utils.AppUtils.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.hocel.mosiko.R
 
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalUnitApi::class
+    ExperimentalMaterialApi::class
 )
 @Composable
 fun MusicScreenAddToPlaylistSheetContent(
@@ -155,18 +155,15 @@ fun MusicScreenAddToPlaylistSheetContent(
                         .padding(24.dp)
                 ) {
                     Icon(
-                        painter = painterResource(
-                            id = when (playlist.id) {
-                                Playlist.favorite.id -> R.drawable.ic_favorite_outlined
-                                else -> R.drawable.ic_music_playlist
-                            }
-                        ),
+                        imageVector = when (playlist.id) {
+                            Playlist.favorite.id -> Icons.Default.Favorite
+                            else -> Icons.Default.QueueMusic
+                        },
                         tint = if (isSystemInDarkTheme()) white else background_dark,
                         contentDescription = null,
                         modifier = Modifier
                             .size(20.dp)
                     )
-
                     Text(
                         overflow = TextOverflow.Ellipsis,
                         text = playlist.name,

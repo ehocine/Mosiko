@@ -7,7 +7,6 @@ import androidx.compose.ui.graphics.Color
 val white = Color(0xFFFFFFFF)
 val black = Color(0xFF000000)
 
-//val black = Color(0xFF000000)
 val sunset_orange = Color(0xFFFE554A)
 
 val Purple200 = Color(0xFFBB86FC)
@@ -54,8 +53,6 @@ val error_light = Color(0xFFB00020)
 val on_error_dark = black
 val on_error_light = white
 
-val BlackWithAlpha = Color(0xAA000000)
-
 val backgroundColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) black else white
@@ -69,10 +66,6 @@ val textColor: Color
     get() = if (isSystemInDarkTheme()) white else black
 
 val scanMusicColor: Color
-    @Composable
-    get() = if (isSystemInDarkTheme()) Color.White else Color.Black
-
-val progressIndicatorColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) Color.White else Color.Black
 

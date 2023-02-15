@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Mosiko"
-        tools:targetApi="31">
+        tools:targetApi="33">
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

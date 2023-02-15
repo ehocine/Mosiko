@@ -77,7 +77,7 @@ fun MiniMusicPlayer(
             )
 
             LinearProgressIndicator(
-                color = progressIndicatorColor,
+                color = sunset_orange,
                 backgroundColor = Color.Transparent,
                 progress = run {
                     return@run currentProgress.toFloat() / currentMusicPlayed.duration

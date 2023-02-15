@@ -51,7 +51,6 @@ fun MusicScreenMoreOptionsSheetContent(
     )
 
     LazyColumn {
-
         items(moreOptionItems) { pair ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -136,7 +135,6 @@ fun MusicScreenMoreOptionsSheetContent(
                 )
             }
         }
-
         item {
             Spacer(
                 modifier = Modifier

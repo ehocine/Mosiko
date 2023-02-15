@@ -44,7 +44,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
     ExperimentalMaterialApi::class
 )
 @Composable
-fun MusyApp(
+fun MosikoApp(
     datastore: AppDatastore,
     homeViewModel: HomeViewModel,
     searchViewModel: SearchViewModel,
@@ -164,9 +164,8 @@ fun MusyApp(
                     }
 
                     // BottomSheet Music more option sheet content ~
-                },
+                }
             ) {
-
                 // BottomSheet Add To Playlist
                 ModalBottomSheetLayout(
                     sheetState = musicControllerState.addToPlaylistModalBottomSheetState,

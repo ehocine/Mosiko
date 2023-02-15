@@ -12,7 +12,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.LaunchedEffect
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.hocel.mosiko.common.AppDatastore
@@ -31,7 +30,7 @@ import com.hocel.mosiko.utils.AppUtils.containBy
 import com.hocel.mosiko.utils.AppUtils.toast
 import com.hocel.mosiko.utils.DatabaseUtil
 import com.hocel.mosiko.ui.MusicControllerViewModel
-import com.hocel.mosiko.ui.MusyApp
+import com.hocel.mosiko.ui.MosikoApp
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -130,7 +129,7 @@ class MainActivity : ComponentActivity(), ServiceConnection {
             setContent {
                 MusyTheme {
                     Surface(color = MaterialTheme.colors.background) {
-                        MusyApp(
+                        MosikoApp(
                             datastore = datastore,
                             homeViewModel = homeViewModel,
                             searchViewModel = searchViewModel,
