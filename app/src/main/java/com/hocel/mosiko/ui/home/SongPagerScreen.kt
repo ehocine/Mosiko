@@ -8,6 +8,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -79,106 +82,139 @@ fun SongPagerScreen(
             )
         }
     ) {
-        when (musicList.isEmpty()) {
-            true -> {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 64.dp)
-                ) {
-                    when (scanMusicViewModel.songsScanState.value) {
-                        false -> {
-                            LottieAnim(modifier = Modifier.size(200.dp), lottie = R.raw.empty_state)
-                            Text(
-                                text = stringResource(id = R.string.no_song),
-                                style = typographyDmSans().body1.copy(
-                                    fontSize = TextUnit(18f, TextUnitType.Sp),
-                                    fontWeight = FontWeight.Bold
-                                ),
-                                modifier = Modifier
-                                    .padding(top = 8.dp)
-                            )
-
-                            Button(
-                                contentPadding = PaddingValues(0.dp),
-                                shape = RoundedCornerShape(8.dp),
-                                elevation = ButtonDefaults.elevation(
-                                    defaultElevation = 0.dp,
-                                    pressedElevation = 0.dp,
-                                    hoveredElevation = 0.dp,
-                                    focusedElevation = 0.dp
-                                ),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = sunset_orange.copy(alpha = 0.4f),
-                                    contentColor = Color.Transparent
-                                ),
-                                onClick = {
-
-                                    scanMusicViewModel.scanLocalSong(context)
-                                    {
-                                        homeViewModel.refreshSongsList.value = true
-                                    }
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(
-                                        top = 12.dp,
-                                        start = 32.dp,
-                                        end = 32.dp
-                                    )
-                            ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 64.dp)
+        ) {
+            when (musicList.isEmpty()) {
+                true -> {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        when (scanMusicViewModel.songsScanState.value) {
+                            false -> {
+                                LottieAnim(
+                                    modifier = Modifier.size(200.dp),
+                                    lottie = R.raw.empty_state
+                                )
                                 Text(
-                                    text = stringResource(id = R.string.scan_local_songs),
-                                    style = typographySkModernist().body1.copy(
-                                        color = sunset_orange,
-                                        fontSize = TextUnit(16f, TextUnitType.Sp),
+                                    text = stringResource(id = R.string.no_song),
+                                    style = typographyDmSans().body1.copy(
+                                        fontSize = TextUnit(18f, TextUnitType.Sp),
                                         fontWeight = FontWeight.Bold
                                     ),
                                     modifier = Modifier
-                                        .padding(vertical = 12.dp)
+                                        .padding(top = 8.dp)
+                                )
+                                Button(
+                                    contentPadding = PaddingValues(0.dp),
+                                    shape = RoundedCornerShape(8.dp),
+                                    elevation = ButtonDefaults.elevation(
+                                        defaultElevation = 0.dp,
+                                        pressedElevation = 0.dp,
+                                        hoveredElevation = 0.dp,
+                                        focusedElevation = 0.dp
+                                    ),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = sunset_orange.copy(alpha = 0.4f),
+                                        contentColor = Color.Transparent
+                                    ),
+                                    onClick = {
+                                        scanMusicViewModel.scanLocalSong(context)
+                                        {
+                                            homeViewModel.refreshSongsList.value = true
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(
+                                            top = 12.dp,
+                                            start = 32.dp,
+                                            end = 32.dp
+                                        )
+                                ) {
+                                    Text(
+                                        text = stringResource(id = R.string.scan_local_songs),
+                                        style = typographySkModernist().body1.copy(
+                                            color = sunset_orange,
+                                            fontSize = TextUnit(16f, TextUnitType.Sp),
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                        modifier = Modifier
+                                            .padding(vertical = 12.dp)
+                                    )
+                                }
+                            }
+                            else -> {
+                                ScanMusicProgressIndicator(
+                                    scannedMusicInPercent = scannedMusicInPercent
                                 )
                             }
                         }
-                        else -> {
-                            ScanMusicProgressIndicator(
-                                scannedMusicInPercent = scannedMusicInPercent
-                            )
-                        }
                     }
                 }
-            }
-            else -> {
-                CompositionLocalProvider(
-                    LocalOverscrollConfiguration provides null
-                ) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize(
-                                fraction = if (musicList.isNotEmpty()) 1f else 0f
-                            )
-                            .padding(bottom = 64.dp)
+                else -> {
+                    CompositionLocalProvider(
+                        LocalOverscrollConfiguration provides null
                     ) {
-                        items(musicList) { music ->
-                            MusicItem(
-                                music = music,
-                                isMusicPlayed = currentMusicPlayed.audioID == music.audioID,
-                                onClick = {
-                                    if (currentMusicPlayed.audioID != music.audioID) {
-                                        musicControllerViewModel.play(music.audioID)
-                                        musicControllerViewModel.getPlaylist()
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize(
+                                    fraction = if (musicList.isNotEmpty()) 1f else 0f
+                                )
+                        ) {
+                            items(musicList) { music ->
+                                MusicItem(
+                                    music = music,
+                                    isMusicPlayed = currentMusicPlayed.audioID == music.audioID,
+                                    onClick = {
+                                        if (currentMusicPlayed.audioID != music.audioID) {
+                                            musicControllerViewModel.play(music.audioID)
+                                            musicControllerViewModel.getPlaylist()
+                                        }
+                                    },
+                                    enableDeleteAction = true,
+                                    deleteMusic = { musicItem ->
+                                        selectedMusic = musicItem
+                                        scope.launch {
+                                            modalBottomSheetState.show()
+                                        }
                                     }
-                                },
-                                enableDeleteAction = true,
-                                deleteMusic = { musicItem ->
-                                    selectedMusic = musicItem
-                                    scope.launch {
-                                        modalBottomSheetState.show()
-                                    }
-                                }
-                            )
+                                )
+                            }
                         }
+                        ExtendedFloatingActionButton(
+                            backgroundColor = if (isSystemInDarkTheme()) white else black,
+                            onClick = {
+                                scanMusicViewModel.scanLocalSong(context)
+                                {
+                                    homeViewModel.refreshSongsList.value = true
+                                }
+                            },
+                            modifier = Modifier
+                                .padding(
+                                    bottom = 32.dp,
+                                    end = 32.dp
+                                )
+                                .align(Alignment.BottomEnd),
+                            text = {
+                                Text(
+                                    text = stringResource(R.string.refresh_songs),
+                                    color = if (isSystemInDarkTheme()) black else white
+                                )
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Rounded.Refresh,
+                                    tint = if (isSystemInDarkTheme()) black else white,
+                                    contentDescription = null
+                                )
+                            }
+                        )
                     }
                 }
             }

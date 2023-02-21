@@ -39,5 +39,6 @@
     <string name="timer_is_set_to">Timer is set to</string>
     <string name="create_new_playlist">Create new</string>
     <string name="loading_local_music">Loading local music</string>
+    <string name="refresh_songs">Refresh songs</string>
 
 </resources>

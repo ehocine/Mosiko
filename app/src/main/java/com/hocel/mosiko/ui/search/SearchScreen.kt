@@ -1,8 +1,10 @@
 package com.hocel.mosiko.ui.search
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -142,7 +144,6 @@ fun SearchScreen(
                                 .focusRequester(searchTextFieldFocusRequester)
                         )
                     }
-
                     Divider(
                         color = background_content_dark,
                         thickness = 1.dp,
@@ -203,15 +204,12 @@ fun SearchScreen(
                                 musicControllerViewModel.play(music.audioID)
                             }
                         },
-                        deleteMusic = {},
-                        modifier = Modifier
-                            .padding(vertical = 4.dp)
+                        deleteMusic = {}
                     )
                 }
 
                 item {
                     if (filteredArtist.isNotEmpty()) {
-
                         if (filteredMusic.isNotEmpty()) {
                             Divider(
                                 color = background_content_dark,
@@ -264,7 +262,7 @@ fun SearchScreen(
                             style = typographySkModernist().body1.copy(
                                 fontSize = TextUnit(16f, TextUnitType.Sp),
                                 fontWeight = FontWeight.SemiBold
-                            ),
+                            )
                         )
 
                         Spacer(
@@ -291,7 +289,6 @@ fun SearchScreen(
 
                 item {
                     if (albumList.isNotEmpty()) {
-
                         if (filteredMusic.isNotEmpty() and filteredArtist.isNotEmpty()) {
                             Divider(
                                 color = background_content_dark,
@@ -340,14 +337,12 @@ fun SearchScreen(
                                 albumList[albumList.keys.toList()[i]]?.get(0)?.albumID
                                     ?: Music.unknown.albumID
                             )
-
                             navController.navigate(route) {
                                 launchSingleTop = true
                             }
                         }
                     )
                 }
-
                 item {
                     Spacer(
                         modifier = Modifier
@@ -355,8 +350,8 @@ fun SearchScreen(
                             .height(32.dp)
                     )
                 }
-
             }
+
         }
     }
 }

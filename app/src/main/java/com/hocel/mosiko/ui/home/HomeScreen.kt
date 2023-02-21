@@ -224,7 +224,7 @@ fun HomeScreen(
                                 navController.navigate(MosikoDestination.Search.route) {
                                     launchSingleTop = true
                                 }
-                            },
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Search,
