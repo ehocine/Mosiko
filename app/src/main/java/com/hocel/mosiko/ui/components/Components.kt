@@ -340,7 +340,6 @@ fun AlbumItem(
                         .padding(top = 6.dp)
                 )
             }
-
         }
     }
 }

@@ -96,6 +96,9 @@ dependencies {
     // Lottie Animation
     implementation 'com.airbnb.android:lottie-compose:5.2.0'
 
+    //Swipe Refresh
+    implementation 'com.google.accompanist:accompanist-swiperefresh:0.24.6-alpha'
+
     //Swipe
     implementation "me.saket.swipe:swipe:1.0.0"
 }

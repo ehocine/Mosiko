@@ -8,9 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -22,22 +19,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hocel.mosiko.R
 import com.hocel.mosiko.common.ScanMusicViewModel
 import com.hocel.mosiko.model.Music
-import com.hocel.mosiko.model.Playlist
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.MusicItem
 import com.hocel.mosiko.ui.components.ScanMusicProgressIndicator
 import com.hocel.mosiko.ui.components.TransparentButton
 import com.hocel.mosiko.ui.components.musicompose.LottieAnim
-import com.hocel.mosiko.ui.playlist.ChangePlaylistNameSheetContent
-import com.hocel.mosiko.ui.playlist.DeletePlaylistSheetContent
-import com.hocel.mosiko.ui.playlist.PlaylistMoreOptionSheetContent
-import com.hocel.mosiko.ui.playlist.PlaylistViewModel
 import com.hocel.mosiko.ui.theme.*
-import com.hocel.mosiko.utils.AppUtils.removeBy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -82,90 +74,95 @@ fun SongPagerScreen(
             )
         }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 64.dp)
-        ) {
-            when (musicList.isEmpty()) {
-                true -> {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        when (scanMusicViewModel.songsScanState.value) {
-                            false -> {
-                                LottieAnim(
-                                    modifier = Modifier.size(200.dp),
-                                    lottie = R.raw.empty_state
-                                )
+        when (musicList.isEmpty()) {
+            true -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 64.dp)
+                ) {
+                    when (scanMusicViewModel.songsScanState.value) {
+                        false -> {
+                            LottieAnim(
+                                modifier = Modifier.size(200.dp),
+                                lottie = R.raw.empty_state
+                            )
+                            Text(
+                                text = stringResource(id = R.string.no_song),
+                                style = typographyDmSans().body1.copy(
+                                    fontSize = TextUnit(18f, TextUnitType.Sp),
+                                    fontWeight = FontWeight.Bold
+                                ),
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                            )
+                            Button(
+                                contentPadding = PaddingValues(0.dp),
+                                shape = RoundedCornerShape(8.dp),
+                                elevation = ButtonDefaults.elevation(
+                                    defaultElevation = 0.dp,
+                                    pressedElevation = 0.dp,
+                                    hoveredElevation = 0.dp,
+                                    focusedElevation = 0.dp
+                                ),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = sunset_orange.copy(alpha = 0.4f),
+                                    contentColor = Color.Transparent
+                                ),
+                                onClick = {
+                                    scanMusicViewModel.scanLocalSong(context)
+                                    {
+                                        homeViewModel.refreshSongsList.value = true
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        top = 12.dp,
+                                        start = 32.dp,
+                                        end = 32.dp
+                                    )
+                            ) {
                                 Text(
-                                    text = stringResource(id = R.string.no_song),
-                                    style = typographyDmSans().body1.copy(
-                                        fontSize = TextUnit(18f, TextUnitType.Sp),
+                                    text = stringResource(id = R.string.scan_local_songs),
+                                    style = typographySkModernist().body1.copy(
+                                        color = sunset_orange,
+                                        fontSize = TextUnit(16f, TextUnitType.Sp),
                                         fontWeight = FontWeight.Bold
                                     ),
                                     modifier = Modifier
-                                        .padding(top = 8.dp)
-                                )
-                                Button(
-                                    contentPadding = PaddingValues(0.dp),
-                                    shape = RoundedCornerShape(8.dp),
-                                    elevation = ButtonDefaults.elevation(
-                                        defaultElevation = 0.dp,
-                                        pressedElevation = 0.dp,
-                                        hoveredElevation = 0.dp,
-                                        focusedElevation = 0.dp
-                                    ),
-                                    colors = ButtonDefaults.buttonColors(
-                                        backgroundColor = sunset_orange.copy(alpha = 0.4f),
-                                        contentColor = Color.Transparent
-                                    ),
-                                    onClick = {
-                                        scanMusicViewModel.scanLocalSong(context)
-                                        {
-                                            homeViewModel.refreshSongsList.value = true
-                                        }
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(
-                                            top = 12.dp,
-                                            start = 32.dp,
-                                            end = 32.dp
-                                        )
-                                ) {
-                                    Text(
-                                        text = stringResource(id = R.string.scan_local_songs),
-                                        style = typographySkModernist().body1.copy(
-                                            color = sunset_orange,
-                                            fontSize = TextUnit(16f, TextUnitType.Sp),
-                                            fontWeight = FontWeight.Bold
-                                        ),
-                                        modifier = Modifier
-                                            .padding(vertical = 12.dp)
-                                    )
-                                }
-                            }
-                            else -> {
-                                ScanMusicProgressIndicator(
-                                    scannedMusicInPercent = scannedMusicInPercent
+                                        .padding(vertical = 12.dp)
                                 )
                             }
                         }
+                        else -> {
+                            ScanMusicProgressIndicator(
+                                scannedMusicInPercent = scannedMusicInPercent
+                            )
+                        }
                     }
                 }
-                else -> {
-                    CompositionLocalProvider(
-                        LocalOverscrollConfiguration provides null
-                    ) {
+            }
+            else -> {
+                CompositionLocalProvider(
+                    LocalOverscrollConfiguration provides null
+                ) {
+                    SwipeRefresh(
+                        state = rememberSwipeRefreshState(isRefreshing = scanMusicViewModel.songsScanState.value),
+                        onRefresh = {
+                            scanMusicViewModel.scanLocalSong(context)
+                            {
+                                homeViewModel.refreshSongsList.value = true
+                            }
+                        }) {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize(
                                     fraction = if (musicList.isNotEmpty()) 1f else 0f
                                 )
+                                .padding(bottom = 64.dp)
                         ) {
                             items(musicList) { music ->
                                 MusicItem(
@@ -187,34 +184,6 @@ fun SongPagerScreen(
                                 )
                             }
                         }
-                        ExtendedFloatingActionButton(
-                            backgroundColor = if (isSystemInDarkTheme()) white else black,
-                            onClick = {
-                                scanMusicViewModel.scanLocalSong(context)
-                                {
-                                    homeViewModel.refreshSongsList.value = true
-                                }
-                            },
-                            modifier = Modifier
-                                .padding(
-                                    bottom = 32.dp,
-                                    end = 32.dp
-                                )
-                                .align(Alignment.BottomEnd),
-                            text = {
-                                Text(
-                                    text = stringResource(R.string.refresh_songs),
-                                    color = if (isSystemInDarkTheme()) black else white
-                                )
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Rounded.Refresh,
-                                    tint = if (isSystemInDarkTheme()) black else white,
-                                    contentDescription = null
-                                )
-                            }
-                        )
                     }
                 }
             }
