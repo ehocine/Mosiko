@@ -101,4 +101,7 @@ dependencies {
 
     //Swipe
     implementation "me.saket.swipe:swipe:1.0.0"
+
+    //AdMob
+    implementation 'com.google.android.gms:play-services-ads:21.5.0'
 }

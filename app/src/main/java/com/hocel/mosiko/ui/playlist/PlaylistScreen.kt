@@ -47,6 +47,7 @@ import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.MusicItem
 import com.hocel.mosiko.ui.components.PlaylistDropMenu
 import com.hocel.mosiko.ui.theme.*
+import com.hocel.mosiko.utils.showInterstitial
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -61,6 +62,7 @@ fun PlaylistScreen(
     playlistViewModel: PlaylistViewModel,
     musicControllerViewModel: MusicControllerViewModel
 ) {
+    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val scope = rememberCoroutineScope()
@@ -134,6 +136,7 @@ fun PlaylistScreen(
             }
         }
     ) {
+        showInterstitial(context)
         ScreenContent(
             scope = scope,
             playlist = playlist,

@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +37,7 @@ import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.components.AlbumItem
 import com.hocel.mosiko.ui.components.MusicItem
 import com.hocel.mosiko.ui.theme.*
+import com.hocel.mosiko.utils.showInterstitial
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(
@@ -48,7 +50,7 @@ fun SearchScreen(
     searchViewModel: SearchViewModel,
     musicControllerViewModel: MusicControllerViewModel
 ) {
-
+    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val currentMusicPlayed by musicControllerViewModel.currentMusicPlayed.observeAsState(initial = Music.unknown)
@@ -152,6 +154,7 @@ fun SearchScreen(
             }
         }
     ) {
+        showInterstitial(context)
         CompositionLocalProvider(
             LocalOverscrollConfiguration provides null
         ) {

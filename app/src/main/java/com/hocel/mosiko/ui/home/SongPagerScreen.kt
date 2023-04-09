@@ -30,6 +30,7 @@ import com.hocel.mosiko.ui.components.ScanMusicProgressIndicator
 import com.hocel.mosiko.ui.components.TransparentButton
 import com.hocel.mosiko.ui.components.musicompose.LottieAnim
 import com.hocel.mosiko.ui.theme.*
+import com.hocel.mosiko.utils.showInterstitial
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -149,6 +150,7 @@ fun SongPagerScreen(
                 CompositionLocalProvider(
                     LocalOverscrollConfiguration provides null
                 ) {
+                    showInterstitial(context)
                     SwipeRefresh(
                         state = rememberSwipeRefreshState(isRefreshing = scanMusicViewModel.songsScanState.value),
                         onRefresh = {

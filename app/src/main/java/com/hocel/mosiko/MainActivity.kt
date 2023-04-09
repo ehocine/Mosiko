@@ -31,6 +31,7 @@ import com.hocel.mosiko.utils.AppUtils.toast
 import com.hocel.mosiko.utils.DatabaseUtil
 import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.MosikoApp
+import com.hocel.mosiko.utils.loadInterstitial
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -142,6 +143,7 @@ class MainActivity : ComponentActivity(), ServiceConnection {
                 }
             }
         }
+        loadInterstitial(this)
     }
 
     override fun onStart() {

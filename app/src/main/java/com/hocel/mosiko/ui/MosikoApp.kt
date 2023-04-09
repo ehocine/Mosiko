@@ -38,6 +38,7 @@ import com.hocel.mosiko.ui.theme.*
 import com.hocel.mosiko.utils.ComposeUtils
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.hocel.mosiko.utils.showInterstitial
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(
@@ -303,6 +304,7 @@ fun MosikoApp(
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            showInterstitial(context)
             MusyNavigation(
                 navigationController = navigationController,
                 datastore = datastore,

@@ -40,6 +40,7 @@ import com.hocel.mosiko.ui.MusicControllerViewModel
 import com.hocel.mosiko.ui.theme.*
 import com.hocel.mosiko.utils.AppUtils
 import com.hocel.mosiko.utils.ComposeUtils.LifecycleEventListener
+import com.hocel.mosiko.utils.showInterstitial
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -237,6 +238,7 @@ fun HomeScreen(
             }
         ) {
             Surface(Modifier.fillMaxSize(), color = if (isSystemInDarkTheme()) black else white) {
+                showInterstitial(context)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
